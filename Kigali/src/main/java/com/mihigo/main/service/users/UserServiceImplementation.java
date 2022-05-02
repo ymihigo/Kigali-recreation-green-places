@@ -88,7 +88,7 @@ public class UserServiceImplementation implements UserServices {
 
 	@Override
 	public Users createSiteUser(String email, String phone, String province, String district, String sector,
-			String names, String gender, String role, int site, String username, String password, String refKey) {
+			String names, String gender, String role, int site, String username, String password) {
 
 		try {
 
@@ -308,6 +308,23 @@ public class UserServiceImplementation implements UserServices {
 
 			us.setPassword(hashPass.hashPassword(newPassword));
 			return userrepo.saveAndFlush(us);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
+
+	@Override
+	public Users searchUserByrefKey(String refKey) {
+		try {
+			if (refKey.isEmpty()) {
+				throw new RuntimeException("Empty reference key");
+			}
+
+			Users uz = userrepo.searchByrefKey(refKey);
+			if (uz == null) {
+				throw new RuntimeException();
+			}
+			return uz;
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage());
 		}

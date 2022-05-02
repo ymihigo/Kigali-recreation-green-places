@@ -41,4 +41,81 @@ public class Site extends Address implements Serializable {
 	@Column(unique = true)
 	private String refKey;
 
+	public Site() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	public Site(String email, String phone, String province, String district, String sector) {
+		super(email, phone, province, district, sector);
+		// TODO Auto-generated constructor stub
+	}
+
+	public Site(String email, String phone, String province, String district, String sector, int id, String name,
+			SiteStatus status, double price, String refKey) {
+		super(email, phone, province, district, sector);
+		this.id = id;
+		this.name = name;
+		this.status = status;
+		this.price = price;
+		this.refKey = refKey;
+	}
+
+	public Site(String email, String phone, String province, String district, String sector, String name,
+			SiteStatus status, double price, String refKey) {
+		super(email, phone, province, district, sector);
+		this.name = name;
+		this.status = status;
+		this.price = price;
+		this.refKey = refKey;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public SiteStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(SiteStatus status) {
+		this.status = status;
+	}
+
+	public double getPrice() {
+		return price;
+	}
+
+	public void setPrice(double price) {
+		this.price = price;
+	}
+
+	public Date getRegistrationDate() {
+		return registrationDate;
+	}
+
+	public void setRegistrationDate(Date registrationDate) {
+		this.registrationDate = registrationDate;
+	}
+
+	public String getRefKey() {
+		return refKey;
+	}
+
+	public void setRefKey(String refKey) {
+		this.refKey = refKey;
+	}
+
 }
