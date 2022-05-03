@@ -45,8 +45,11 @@ public class SiteInterfaceImplementation implements SiteInterface {
 
 	@Override
 	public List<Site> allSite() {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+			return siterepo.findAll();
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
 	}
 
 	@Override
