@@ -3,12 +3,14 @@ package com.mihigo.main.service.site;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.mihigo.main.models.Site;
 import com.mihigo.main.models.SiteStatus;
 import com.mihigo.main.repositories.SiteRepository;
 import com.mihigo.main.tools.Randomazation;
 
+@Service
 public class SiteInterfaceImplementation implements SiteInterface {
 
 	@Autowired
@@ -57,6 +59,23 @@ public class SiteInterfaceImplementation implements SiteInterface {
 			String name, String status, double price) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public Site searchByReferenceKey(String refKey) {
+		try {
+			if (refKey.isEmpty()) {
+				throw new RuntimeException("Invalid ref key");
+			}
+			Site s = siterepo.searchByrefKey(refKey);
+
+			if (s == null) {
+				throw new RuntimeException("Invalid ref key");
+			}
+			return s;
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
 	}
 
 }

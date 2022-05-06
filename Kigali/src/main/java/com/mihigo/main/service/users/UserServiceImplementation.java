@@ -330,4 +330,63 @@ public class UserServiceImplementation implements UserServices {
 		}
 	}
 
+	@Override
+	public Users createUserBySiteRefKey(String email, String phone, String province, String district, String sector,
+			String names, String gender, String role, String refSite, String username, String password) {
+		try {
+
+			if (email.isEmpty() || phone.isEmpty() || province.isEmpty() || district.isEmpty() || sector.isEmpty()
+					|| names.isEmpty() || gender.isEmpty() || role.isEmpty() || username.isEmpty() || password.isEmpty()
+					|| refSite.isEmpty()) {
+				throw new RuntimeException("Please fill all requirements");
+			}
+
+			Site si = siterepo.searchByrefKey(refSite);
+
+			if (si == null) {
+				throw new InvalidParameters("Invalid site");
+			}
+
+			UserRole rol = UserRole.valueOf(role);
+			Gender gend = Gender.valueOf(gender);
+			if (!email.matches("[^@ \\t\\r\\n]+@[^@ \\t\\r\\n]+\\.[^@ \\t\\r\\n]+")) {
+				throw new RuntimeException("Invalid email format");
+			}
+			if (!password.matches("^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,16}$")) {
+				throw new RuntimeException("Weak password !!");
+			}
+
+			Users uz = userrepo.searchUserByUsername(username);
+
+			if (uz != null) {
+				throw new RuntimeException("Username alread exist !!");
+			}
+
+			Users uemail = userrepo.searchByemail(email);
+
+			if (uemail != null) {
+				throw new RuntimeException("email alread exist !!");
+			}
+
+			Users up = userrepo.searchByPhone(phone);
+
+			if (up != null) {
+				throw new RuntimeException("Phone number already exist");
+			}
+			if (!phone.matches("^\\+2507[2-3-8-9]{1}\\d{7}$")) {
+				throw new RuntimeException("Invalid phone number format");
+			}
+
+			String hashedPassword = hashPass.hashPassword(password);
+
+			String refkey = ran.random(21);
+
+			Users u = userrepo.saveAndFlush(new Users(email, phone, province, district, sector, names, gend, rol,
+					si, username, hashedPassword, refkey));
+			return u;
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
+
 }

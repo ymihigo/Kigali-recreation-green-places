@@ -14,4 +14,6 @@ public interface SiteInterface {
 	Site updateSite(int site_id, String email, String phone, String province, String district, String sector,
 			String name, String status, double price);
 
+	Site searchByReferenceKey(String refKey);
+
 }

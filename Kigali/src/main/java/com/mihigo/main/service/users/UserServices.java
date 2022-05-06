@@ -1,6 +1,5 @@
 package com.mihigo.main.service.users;
 
-import java.io.File;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -24,4 +23,7 @@ public interface UserServices {
 	Users changeuserPassword(String refkey, String oldpassword, String newPassword);
 
 	Users searchUserByrefKey(String refKey);
+	
+	Users createUserBySiteRefKey(String email, String phone, String province, String district, String sector, String names,
+			String gender, String role, String refSite, String username, String password);
 }

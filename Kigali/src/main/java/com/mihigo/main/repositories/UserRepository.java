@@ -1,5 +1,7 @@
 package com.mihigo.main.repositories;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -21,5 +23,8 @@ public interface UserRepository extends JpaRepository<Users, Integer> {
 
 	@Query("From Users u where u.phone = :phone")
 	Users searchByPhone(@Param("phone") String phone);
+	
+	@Query("FROM Users u JOIN Site s ON u.site = s.id WHERE s.refKey = :ref")
+	List<Users> allUserBySiteRefKey(@Param(value = "ref") String siteRefKey);
 
 }

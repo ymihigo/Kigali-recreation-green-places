@@ -15,6 +15,7 @@ import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.CollectionId;
@@ -32,6 +33,7 @@ public class Site extends Address implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
+	@Column(unique = true)
 	private String name;
 	@Enumerated(EnumType.STRING)
 	private SiteStatus status;

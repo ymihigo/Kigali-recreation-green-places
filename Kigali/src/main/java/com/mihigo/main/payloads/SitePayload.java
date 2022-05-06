@@ -13,14 +13,14 @@ public class SitePayload {
 	private String status;
 	private double price;
 	private int id;
+	private String ref;
 
 	public SitePayload() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public SitePayload(String email, String phone, String province, String district, String sector, String name,
-			String status, double price, int id) {
+			String status, double price, int id, String ref) {
 		this.email = email;
 		this.phone = phone;
 		this.province = province;
@@ -30,6 +30,7 @@ public class SitePayload {
 		this.status = status;
 		this.price = price;
 		this.id = id;
+		this.ref = ref;
 	}
 
 	public SitePayload(String email, String phone, String province, String district, String sector, String name,
@@ -42,6 +43,19 @@ public class SitePayload {
 		this.name = name;
 		this.status = status;
 		this.price = price;
+	}
+
+	public SitePayload(String email, String phone, String province, String district, String sector, String name,
+			String status, double price, String ref) {
+		this.email = email;
+		this.phone = phone;
+		this.province = province;
+		this.district = district;
+		this.sector = sector;
+		this.name = name;
+		this.status = status;
+		this.price = price;
+		this.ref = ref;
 	}
 
 	public String getEmail() {
@@ -115,5 +129,15 @@ public class SitePayload {
 	public void setId(int id) {
 		this.id = id;
 	}
+
+	public String getRef() {
+		return ref;
+	}
+
+	public void setRef(String ref) {
+		this.ref = ref;
+	}
+	
+	
 
 }
