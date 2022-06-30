@@ -9,10 +9,11 @@ import org.springframework.stereotype.Repository;
 
 import com.mihigo.main.models.Districts;
 
-
 @Repository
 public interface DistrictsRepo extends JpaRepository<Districts, Integer> {
 
 	@Query("FROM Districts WHERE province_id = :pid")
 	List<Districts> getDistrictsByProvinces(@Param("pid") int pid);
+
+	Districts findByDistrict(String district);
 }

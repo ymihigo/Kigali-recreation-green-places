@@ -7,7 +7,9 @@ import org.springframework.stereotype.Service;
 
 import com.mihigo.main.models.Site;
 import com.mihigo.main.models.SiteStatus;
+import com.mihigo.main.models.Users;
 import com.mihigo.main.repositories.SiteRepository;
+import com.mihigo.main.repositories.UserRepository;
 import com.mihigo.main.tools.Randomazation;
 
 @Service
@@ -15,6 +17,9 @@ public class SiteInterfaceImplementation implements SiteInterface {
 
 	@Autowired
 	private SiteRepository siterepo;
+
+	@Autowired
+	private UserRepository usr;
 
 	@Autowired
 	private Randomazation rand;
@@ -75,6 +80,46 @@ public class SiteInterfaceImplementation implements SiteInterface {
 			return s;
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage());
+		}
+	}
+
+	@Override
+	public List<Users> getUsersBySiteRefKey(String refKey) {
+		try {
+			if (refKey.isEmpty()) {
+				throw new RuntimeException("Invalid ref key");
+			}
+			List<Users> lu = usr.allUserBySiteRefKey(refKey);
+			return lu;
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
+
+	@Override
+	public List<Site> findByStatus(SiteStatus status) {
+		try {
+			return siterepo.findAllByStatus(status);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
+
+	@Override
+	public long countByStatus(SiteStatus status) {
+		try {
+			return siterepo.countAllByStatus(status);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
+
+	@Override
+	public long countAllSites() {
+		try {
+			return siterepo.count();
+		} catch (Exception ex) {
+			throw new RuntimeException();
 		}
 	}
 

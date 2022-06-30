@@ -57,6 +57,19 @@ public class VisitSite extends Person implements Serializable {
 		this.paidAmount = paidAmount;
 	}
 	
+	
+
+	public VisitSite(Site site, double paidAmount) {
+		this.site = site;
+		this.paidAmount = paidAmount;
+	}
+
+	public VisitSite(String names, Gender gender, Site site, double paidAmount) {
+		super(names, gender);
+		this.site = site;
+		this.paidAmount = paidAmount;
+	}
+
 	public long getId() {
 		return id;
 	}

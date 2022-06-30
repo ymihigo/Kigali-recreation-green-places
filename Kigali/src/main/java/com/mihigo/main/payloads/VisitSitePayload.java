@@ -1,9 +1,6 @@
 package com.mihigo.main.payloads;
 
-import org.springframework.stereotype.Component;
-
-@Component
-public class UserInputPayload {
+public class VisitSitePayload {
 	private String email;
 	private String phone;
 	private String province;
@@ -11,16 +8,16 @@ public class UserInputPayload {
 	private String sector;
 	private String names;
 	private String gender;
-	private String role;
-	private String username;
-	private String password;
+	private String siteRef;
+	private double paidAmount;
 
-	public UserInputPayload() {
+	public VisitSitePayload() {
 		super();
+		// TODO Auto-generated constructor stub
 	}
 
-	public UserInputPayload(String email, String phone, String province, String district, String sector, String names,
-			String gender, String role, String username, String password) {
+	public VisitSitePayload(String email, String phone, String province, String district, String sector, String names,
+			String gender, String siteRef, double paidAmount) {
 		this.email = email;
 		this.phone = phone;
 		this.province = province;
@@ -28,9 +25,8 @@ public class UserInputPayload {
 		this.sector = sector;
 		this.names = names;
 		this.gender = gender;
-		this.role = role;
-		this.username = username;
-		this.password = password;
+		this.siteRef = siteRef;
+		this.paidAmount = paidAmount;
 	}
 
 	public String getEmail() {
@@ -89,27 +85,20 @@ public class UserInputPayload {
 		this.gender = gender;
 	}
 
-	public String getRole() {
-		return role;
+	public String getSiteRef() {
+		return siteRef;
 	}
 
-	public void setRole(String role) {
-		this.role = role;
+	public void setSiteRef(String siteRef) {
+		this.siteRef = siteRef;
 	}
 
-	public String getUsername() {
-		return username;
+	public double getPaidAmount() {
+		return paidAmount;
 	}
 
-	public void setUsername(String username) {
-		this.username = username;
+	public void setPaidAmount(double paidAmount) {
+		this.paidAmount = paidAmount;
 	}
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
 }

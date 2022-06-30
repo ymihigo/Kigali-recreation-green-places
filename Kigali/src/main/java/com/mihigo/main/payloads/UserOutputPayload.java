@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 
 import com.mihigo.main.models.Gender;
 import com.mihigo.main.models.UserRole;
+import com.mihigo.main.models.UserStatus;
 
 @Component
 public class UserOutputPayload {
-	private int id;
 	private String email;
 	private String phone;
 	private String province;
@@ -18,35 +18,17 @@ public class UserOutputPayload {
 	private String names;
 	private Gender gender;
 	private UserRole role;
-	private int site;
 	private String username;
 	private String refKey;
 	private Date date;
+	private UserStatus status;
 
 	public UserOutputPayload() {
 		super();
 	}
 
-	public UserOutputPayload(int id, String email, String phone, String province, String district, String sector,
-			String names, Gender gender, UserRole role, int site, String username, String refKey, Date date) {
-		this.id = id;
-		this.email = email;
-		this.phone = phone;
-		this.province = province;
-		this.district = district;
-		this.sector = sector;
-		this.names = names;
-		this.gender = gender;
-		this.role = role;
-		this.site = site;
-		this.username = username;
-		this.refKey = refKey;
-		this.date = date;
-	}
-
-	public UserOutputPayload(int id, String email, String phone, String province, String district, String sector,
-			String names, Gender gender, UserRole role, String username, String refKey, Date date) {
-		this.id = id;
+	public UserOutputPayload(String email, String phone, String province, String district, String sector, String names,
+			Gender gender, UserRole role, String username, String refKey, Date date, UserStatus status) {
 		this.email = email;
 		this.phone = phone;
 		this.province = province;
@@ -58,14 +40,7 @@ public class UserOutputPayload {
 		this.username = username;
 		this.refKey = refKey;
 		this.date = date;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
+		this.status = status;
 	}
 
 	public String getEmail() {
@@ -132,14 +107,6 @@ public class UserOutputPayload {
 		this.role = role;
 	}
 
-	public int getSite() {
-		return site;
-	}
-
-	public void setSite(int site) {
-		this.site = site;
-	}
-
 	public String getUsername() {
 		return username;
 	}
@@ -162,6 +129,14 @@ public class UserOutputPayload {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public UserStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(UserStatus status) {
+		this.status = status;
 	}
 
 }

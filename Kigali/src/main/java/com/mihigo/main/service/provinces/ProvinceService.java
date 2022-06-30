@@ -7,4 +7,5 @@ import com.mihigo.main.models.Provinces;
 public interface ProvinceService {
 	List<Provinces> allProvinces();
 	Provinces getProvinceById(int id);
+	Provinces getProvinceByProvinceName(String province);
 }

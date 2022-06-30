@@ -3,6 +3,8 @@ package com.mihigo.main.service.site;
 import java.util.List;
 
 import com.mihigo.main.models.Site;
+import com.mihigo.main.models.SiteStatus;
+import com.mihigo.main.models.Users;
 
 public interface SiteInterface {
 
@@ -15,5 +17,13 @@ public interface SiteInterface {
 			String name, String status, double price);
 
 	Site searchByReferenceKey(String refKey);
+
+	List<Users> getUsersBySiteRefKey(String refKey);
+
+	List<Site> findByStatus(SiteStatus status);
+
+	long countByStatus(SiteStatus status);
+
+	long countAllSites();
 
 }

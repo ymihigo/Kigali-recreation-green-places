@@ -9,18 +9,17 @@ import org.springframework.stereotype.Service;
 import com.mihigo.main.models.Provinces;
 import com.mihigo.main.repositories.ProvinceRepo;
 
-
 @Service
 public class ProvincesServicesImplementation implements ProvinceService {
 
 	@Autowired
 	private ProvinceRepo prepo;
-	
+
 	@Override
 	public List<Provinces> allProvinces() {
 		try {
 			return prepo.findAll();
-		}catch(Exception ex) {
+		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage());
 		}
 	}
@@ -28,12 +27,24 @@ public class ProvincesServicesImplementation implements ProvinceService {
 	@Override
 	public Provinces getProvinceById(int id) {
 		try {
-			Optional<Provinces> prov=prepo.findById(id);
-			if(prov.isEmpty()) {
+			Optional<Provinces> prov = prepo.findById(id);
+			if (prov.isEmpty()) {
 				throw new RuntimeException("Invalid province id");
 			}
 			return prov.get();
-		}catch(Exception ex) {
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
+
+	@Override
+	public Provinces getProvinceByProvinceName(String province) {
+		try {
+			if (province.isBlank()) {
+				throw new RuntimeException("please fill all requirements");
+			}
+			return prepo.findByProvince(province);
+		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage());
 		}
 	}

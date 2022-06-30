@@ -1,6 +1,7 @@
 package com.mihigo.main.service.users;
 
 import java.util.Base64;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -267,24 +268,23 @@ public class UserServiceImplementation implements UserServices {
 	}
 
 	@Override
-	public Users updateProfilePicture(int userid, MultipartFile image) {
+	public Users updateProfilePicture(String userKey, MultipartFile image) {
 		try {
 			String filename = StringUtils.cleanPath(image.getOriginalFilename());
 			if (filename.isBlank() || filename.contains("..")) {
 				throw new RuntimeException("Invalid file");
 			}
 
-			Optional<Users> us = userrepo.findById(userid);
+			Users us = userrepo.searchByrefKey(userKey);
 
-			if (us.isEmpty()) {
+			if (us == null) {
 				throw new RuntimeException("Invalid user");
 			}
 
 			String file = Base64.getEncoder().encodeToString(image.getBytes());
 
-			Users uz = us.get();
-			uz.setImage(file);
-			return userrepo.saveAndFlush(uz);
+			us.setImage(file);
+			return userrepo.saveAndFlush(us);
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage());
 		}
@@ -381,9 +381,34 @@ public class UserServiceImplementation implements UserServices {
 
 			String refkey = ran.random(21);
 
-			Users u = userrepo.saveAndFlush(new Users(email, phone, province, district, sector, names, gend, rol,
-					si, username, hashedPassword, refkey));
+			Users u = userrepo.saveAndFlush(new Users(email, phone, province, district, sector, names, gend, rol, si,
+					username, hashedPassword, refkey));
 			return u;
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
+
+	@Override
+	public List<Users> getAllUsers() {
+		try {
+			return userrepo.findAll();
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
+
+	@Override
+	public Users getUserByRefKey(String refKey) {
+		try {
+			if (refKey.isEmpty()) {
+				throw new RuntimeException("Invalid Key");
+			}
+			Users ux = userrepo.searchByrefKey(refKey);
+			if (ux == null) {
+				throw new RuntimeException("Invalid Key");
+			}
+			return ux;
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage());
 		}

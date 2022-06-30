@@ -27,4 +27,16 @@ public class DistrictsServicesImplementation implements DistrictsServices {
 		}
 	}
 
+	@Override
+	public Districts findByDistrictsName(String districtName) {
+		try {
+			if (districtName.isBlank()) {
+				throw new RuntimeException("district name is required");
+			}
+			return dr.findByDistrict(districtName);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
+
 }

@@ -17,6 +17,11 @@ public class Person extends Address {
 		super();
 	}
 
+	public Person(String names, Gender gender) {
+		this.names = names;
+		this.gender = gender;
+	}
+
 	public Person(String email, String phone, String province, String district, String sector) {
 		super(email, phone, province, district, sector);
 	}
