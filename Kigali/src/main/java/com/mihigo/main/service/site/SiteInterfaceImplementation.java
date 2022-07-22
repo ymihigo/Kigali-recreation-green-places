@@ -1,9 +1,12 @@
 package com.mihigo.main.service.site;
 
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.mihigo.main.models.Site;
 import com.mihigo.main.models.SiteStatus;
@@ -60,22 +63,25 @@ public class SiteInterfaceImplementation implements SiteInterface {
 	}
 
 	@Override
-	public Site updateSite(int site_id, String email, String phone, String province, String district, String sector,
-			String name, String status, double price) {
-		// TODO Auto-generated method stub
-		return null;
+	public Site updateSite(String refKey, String email, String phone, String province, String district, String sector,
+			String name, String status, double price, String about) {
+		try {
+			return null;
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
 	}
 
 	@Override
 	public Site searchByReferenceKey(String refKey) {
 		try {
 			if (refKey.isEmpty()) {
-				throw new RuntimeException("Invalid ref key");
+				throw new RuntimeException("reference key can not be null");
 			}
 			Site s = siterepo.searchByrefKey(refKey);
 
 			if (s == null) {
-				throw new RuntimeException("Invalid ref key");
+				throw new RuntimeException("no site found");
 			}
 			return s;
 		} catch (Exception ex) {
@@ -120,6 +126,42 @@ public class SiteInterfaceImplementation implements SiteInterface {
 			return siterepo.count();
 		} catch (Exception ex) {
 			throw new RuntimeException();
+		}
+	}
+
+	@Override
+	public Site addSiteImages(String siteRefKey, MultipartFile photo1, MultipartFile photo2, MultipartFile photo3) {
+		try {
+
+			String typ = photo1.getContentType();
+			String typ2 = photo2.getContentType();
+			String typ3 = photo3.getContentType();
+			if (typ.startsWith("image/") && typ2.startsWith("image/") && typ3.startsWith("image/")) {
+				String img1 = StringUtils.cleanPath(photo1.getOriginalFilename());
+				String img2 = StringUtils.cleanPath(photo2.getOriginalFilename());
+				String img3 = StringUtils.cleanPath(photo3.getOriginalFilename());
+
+				if (img1.contains("..") || img2.contains("..") || img3.contains("..")) {
+					throw new RuntimeException("All images are required");
+				}
+
+				Site sit = searchByReferenceKey(siteRefKey);
+
+				String image1 = Base64.getEncoder().encodeToString(photo1.getBytes());
+				String image2 = Base64.getEncoder().encodeToString(photo2.getBytes());
+				String image3 = Base64.getEncoder().encodeToString(photo3.getBytes());
+
+				sit.setPhoto_one(image1);
+				sit.setPhoto_two(image2);
+				sit.setPhoto_three(image3);
+
+				return siterepo.saveAndFlush(sit);
+			} else {
+				throw new RuntimeException("Invalid file type");
+			}
+
+		} catch (Exception e) {
+			throw new RuntimeException(e.getMessage());
 		}
 	}
 

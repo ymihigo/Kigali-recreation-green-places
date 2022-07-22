@@ -6,9 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Order;
 import org.springframework.stereotype.Service;
 
 import com.mihigo.main.models.Gender;
@@ -124,6 +122,57 @@ public class VisitInterfaceImplementation implements VisitInterface {
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage());
 		}
+	}
+
+	@Override
+	public long countAll(String period, String refKey) {
+		try {
+			Site sit = sr.findByRefKey(refKey);
+			if (period.equalsIgnoreCase("today")) {
+				return vr.countvisitorsToday(sit);
+			} else if (period.equalsIgnoreCase("month")) {
+				return vr.countvisitorsMonth(sit);
+			} else if (period.equalsIgnoreCase("year")) {
+				return vr.countvisitorsYear(sit);
+			} else {
+				throw new RuntimeException("An error has occured");
+			}
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
+
+	@Override
+	public long countAll(String period) {
+		try {
+			if (period.equalsIgnoreCase("today")) {
+				return vr.countvisitorsToday();
+			} else if (period.equalsIgnoreCase("month")) {
+				return vr.countvisitorsMonth();
+			} else if (period.equalsIgnoreCase("year")) {
+				return vr.countvisitorsYear();
+			} else {
+				throw new RuntimeException("An error has occured");
+			}
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
+
+	@Override
+	public double countRevenue(String period) {
+		try {
+			
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+		return 0;
+	}
+
+	@Override
+	public double countRevenue(String period, String refKey) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }

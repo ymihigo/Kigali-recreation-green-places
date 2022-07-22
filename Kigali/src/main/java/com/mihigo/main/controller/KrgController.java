@@ -21,12 +21,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.mihigo.main.exceptionHandler.InvalidParameters;
 import com.mihigo.main.models.Districts;
 import com.mihigo.main.models.Gender;
+import com.mihigo.main.models.ReportTyoe;
 import com.mihigo.main.models.Sectors;
 import com.mihigo.main.models.Site;
 import com.mihigo.main.models.SiteStatus;
-import com.mihigo.main.models.UserRole;
+import com.mihigo.main.models.Role;
 import com.mihigo.main.models.Users;
-import com.mihigo.main.payloads.ApiResponse;
 import com.mihigo.main.payloads.SitePayload;
 import com.mihigo.main.payloads.UserInputPayload;
 import com.mihigo.main.payloads.UserOutputPayload;
@@ -37,6 +37,7 @@ import com.mihigo.main.service.districts.DistrictsServices;
 import com.mihigo.main.service.reports.ReportServiceInterface;
 import com.mihigo.main.service.sectors.SectorServices;
 import com.mihigo.main.service.site.SiteInterface;
+import com.mihigo.main.service.userRoles.UserRolesInterface;
 import com.mihigo.main.service.users.UserServices;
 import com.mihigo.main.service.visitsite.VisitInterface;
 
@@ -63,13 +64,15 @@ public class KrgController {
 	@Autowired
 	private ReportServiceInterface report_service;
 
-	@RequestMapping(method = RequestMethod.POST, path = "newAdmin")
+	@Autowired
+	private UserRolesInterface role_Service;
+
+	@RequestMapping(method = RequestMethod.POST, path = "admin/newAdmin")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> createUser(@RequestBody UserInputPayload user) throws InvalidParameters {
 		try {
 			Users uz = uzer.createAdminUser(user.getEmail(), user.getPhone(), user.getProvince(), user.getDistrict(),
-					user.getSector(), user.getNames(), user.getGender(), user.getRole(), user.getUsername(),
-					user.getPassword());
+					user.getSector(), user.getNames(), user.getGender(), user.getUsername(), user.getPassword());
 			UserOutputPayload outz = new UserOutputPayload(uz.getEmail(), uz.getPhone(), uz.getProvince(),
 					uz.getDistrict(), uz.getSector(), uz.getNames(), uz.getGender(), uz.getRole(), uz.getUsername(),
 					uz.getRefKey(), uz.getRegDate(), uz.getStatus());
@@ -80,24 +83,52 @@ public class KrgController {
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.POST, path = "siteAdmin")
+//	@RequestMapping(method = RequestMethod.POST, path = "siteAdmin")
+//	@CrossOrigin(origins = "*")
+//	public ResponseEntity<?> createSiteUser(@RequestBody UserInputPayload user) throws InvalidParameters {
+//		try {
+//			Users uz = uzer.createAdminUser(user.getEmail(), user.getPhone(), user.getProvince(), user.getDistrict(),
+//					user.getSector(), user.getNames(), user.getGender(), user.getRole(), user.getUsername(),
+//					user.getPassword());
+//			UserOutputPayload outz = new UserOutputPayload(uz.getEmail(), uz.getPhone(), uz.getProvince(),
+//					uz.getDistrict(), uz.getSector(), uz.getNames(), uz.getGender(), uz.getRole(), uz.getUsername(),
+//					uz.getRefKey(), uz.getRegDate(), uz.getStatus());
+//
+//			return new ResponseEntity<UserOutputPayload>(outz, HttpStatus.OK);
+//		} catch (Exception ex) {
+//			throw new InvalidParameters(ex.getMessage());
+//		}
+//	}
+
+	@RequestMapping(method = RequestMethod.GET, path = "user/getUser")
 	@CrossOrigin(origins = "*")
-	public ResponseEntity<?> createSiteUser(@RequestBody UserInputPayload user) throws InvalidParameters {
+	public ResponseEntity<?> getUserByUsername(@RequestParam("username") String username) throws InvalidParameters {
 		try {
-			Users uz = uzer.createAdminUser(user.getEmail(), user.getPhone(), user.getProvince(), user.getDistrict(),
-					user.getSector(), user.getNames(), user.getGender(), user.getRole(), user.getUsername(),
-					user.getPassword());
-			UserOutputPayload outz = new UserOutputPayload(uz.getEmail(), uz.getPhone(), uz.getProvince(),
-					uz.getDistrict(), uz.getSector(), uz.getNames(), uz.getGender(), uz.getRole(), uz.getUsername(),
-					uz.getRefKey(), uz.getRegDate(), uz.getStatus());
-
-			return new ResponseEntity<UserOutputPayload>(outz, HttpStatus.OK);
+			Users uz = uzer.getUser(username);
+			return ResponseEntity.ok()
+					.body(new UserOutputPayload(uz.getEmail(), uz.getPhone(), uz.getProvince(), uz.getDistrict(),
+							uz.getSector(), uz.getNames(), uz.getGender(), uz.getRole(), uz.getUsername(),
+							uz.getRefKey(), uz.getRegDate(), uz.getStatus()));
 		} catch (Exception ex) {
 			throw new InvalidParameters(ex.getMessage());
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.POST, path = "siteAdminByRef")
+	@RequestMapping(method = RequestMethod.GET, path = "admin/alluzers")
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<?> getUsers() throws InvalidParameters {
+		try {
+//
+//			URI uri = URI.create(
+//					ServletUriComponentsBuilder.fromCurrentContextPath().path("kigali/admin/alluzers").toUriString());
+//			return ResponseEntity.ok().body(uzer.createAdminUser(user.getEmail(), user.getPhone(), user.getProvince(), user.getDistrict(), user.getSector(), user.getNames(), user.getGender(), user.getUsername(), user.getPassword()));
+			return ResponseEntity.ok().body(uzer.getAllUsers());
+		} catch (Exception ex) {
+			throw new InvalidParameters(ex.getMessage());
+		}
+	}
+
+	@RequestMapping(method = RequestMethod.POST, path = "admin/siteAdminByRef")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> createSiteUserByRef(@RequestBody UserPayloadRef user) throws InvalidParameters {
 		try {
@@ -115,7 +146,7 @@ public class KrgController {
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.POST, path = "newSite")
+	@RequestMapping(method = RequestMethod.POST, path = "admin/newSite")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> createSite(@RequestBody SitePayload si) throws InvalidParameters {
 		try {
@@ -127,7 +158,7 @@ public class KrgController {
 		}
 	}
 
-	@GetMapping("/allSite")
+	@GetMapping("admin/allSite")
 	@CrossOrigin(origins = "*")
 	public List<Site> allSite() throws InvalidParameters {
 		try {
@@ -137,7 +168,7 @@ public class KrgController {
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.GET, path = "/all_provinces")
+	@RequestMapping(method = RequestMethod.GET, path = "all_provinces")
 	@CrossOrigin(origins = "*")
 	public List<?> getAllProvinces() throws InvalidParameters {
 		try {
@@ -158,7 +189,7 @@ public class KrgController {
 		}
 	}
 
-	@GetMapping("/getSectors")
+	@GetMapping("getSectors")
 	@CrossOrigin(origins = "*")
 	public List<?> getSectorsByDistrict(@RequestParam(value = "id") int id) throws InvalidParameters {
 		try {
@@ -171,13 +202,9 @@ public class KrgController {
 
 	@GetMapping("/getUserRole")
 	@CrossOrigin(origins = "*")
-	public List<String> userroles() throws InvalidParameters {
+	public List<Role> userroles() throws InvalidParameters {
 		try {
-			List<String> l = new ArrayList<>();
-			for (Enum<UserRole> x : UserRole.values()) {
-				l.add(x.toString());
-			}
-			return l;
+			return role_Service.getAllUserRoles();
 		} catch (Exception ex) {
 			throw new InvalidParameters(ex.getMessage());
 		}
@@ -197,7 +224,7 @@ public class KrgController {
 		}
 	}
 
-	@GetMapping("/allSiteStatus")
+	@GetMapping("allSiteStatus")
 	@CrossOrigin(origins = "*")
 	public List<String> siteStatus() throws InvalidParameters {
 		try {
@@ -235,7 +262,7 @@ public class KrgController {
 		}
 	}
 
-	@GetMapping("/allUsers")
+	@GetMapping("admin/allUsers")
 	@CrossOrigin(origins = "*")
 	public List<UserOutputPayload> getAlltUsers() throws InvalidParameters {
 		try {
@@ -252,7 +279,7 @@ public class KrgController {
 		}
 	}
 
-	@GetMapping("/userbyRef")
+	@GetMapping("user/userbyRef")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<Users> getUserByKey(@RequestParam("ref") String refKey) throws InvalidParameters {
 		try {
@@ -267,8 +294,6 @@ public class KrgController {
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> cameraVisitors(@PathVariable String key) throws InvalidParameters {
 		try {
-
-//			System.out.println("Hello" + key);
 			visitService.visitByCamera(key);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
@@ -276,7 +301,7 @@ public class KrgController {
 		}
 	}
 
-	@GetMapping("/site_count")
+	@GetMapping("admin/site_count")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> countByStatus(@RequestParam("status") SiteStatus status) throws InvalidParameters {
 		try {
@@ -295,7 +320,7 @@ public class KrgController {
 		}
 	}
 
-	@GetMapping("/all_site_count")
+	@GetMapping("/admin/all_site_count")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> countSite() throws InvalidParameters {
 		try {
@@ -305,7 +330,7 @@ public class KrgController {
 		}
 	}
 
-	@GetMapping("all_sites_by_status")
+	@GetMapping("admin/all_sites_by_status")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> listSiteByStatus(@RequestParam("status") SiteStatus status) throws InvalidParameters {
 		try {
@@ -324,7 +349,7 @@ public class KrgController {
 		}
 	}
 
-	@GetMapping("/search_province")
+	@GetMapping("search_province")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> findByProvinceName(@RequestParam("province") String province) throws InvalidParameters {
 		try {
@@ -334,7 +359,7 @@ public class KrgController {
 		}
 	}
 
-	@GetMapping("/search_district")
+	@GetMapping("search_district")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> findByDistrictName(@RequestParam("district") String district) throws InvalidParameters {
 		try {
@@ -356,10 +381,10 @@ public class KrgController {
 		}
 	}
 
-	@PostMapping("report")
+	@PostMapping("user/report")
 	@CrossOrigin(origins = "*")
-	public ResponseEntity<?> createReport(@RequestParam("userRef") String userRef,
-			@RequestParam("report") String report,
+	public ResponseEntity<?> createReport(@RequestParam(value = "userRef", required = true) String userRef,
+			@RequestParam(value = "report", required = true) String report,
 			@RequestParam(value = "document", required = false) MultipartFile document) {
 		try {
 			if (document == null) {
@@ -413,13 +438,56 @@ public class KrgController {
 			throw new InvalidParameters(ex.getMessage());
 		}
 	}
-	
+
 	@GetMapping("/pagination/{offset}/{pagesize}")
 	@CrossOrigin(origins = "*")
-	public ResponseEntity<?> findAllVisitorsSortByfield(@PathVariable("offset") int offset,@PathVariable("pagesize") int pagesize) throws InvalidParameters {
+	public ResponseEntity<?> findAllVisitorsSortByfield(@PathVariable("offset") int offset,
+			@PathVariable("pagesize") int pagesize) throws InvalidParameters {
 		try {
 			List<VisitTable> li = visitService.findAllWithPagination(offset, pagesize);
 			return ResponseEntity.ok().body(li);
+		} catch (Exception ex) {
+			throw new InvalidParameters(ex.getMessage());
+		}
+	}
+
+	@GetMapping(value = { "user/countvisitors/{period}", "user/countvisitors/{period}/{ref}" })
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<?> countVisitors(@PathVariable(value = "ref", required = false) String ref,
+			@PathVariable(value = "period", required = true) String period) throws InvalidParameters {
+		try {
+
+			if (ref == null) {
+				return ResponseEntity.ok().body(visitService.countAll(period));
+			} else {
+				return ResponseEntity.ok().body(visitService.countAll(period, ref));
+			}
+		} catch (Exception ex) {
+			throw new InvalidParameters(ex.getMessage());
+		}
+	}
+
+	@RequestMapping(method = RequestMethod.POST, path = "user/uploadSiteImages")
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<?> checkFileType(@RequestParam("refKey") String siteRefKey,
+			@RequestParam("imageOne") MultipartFile photo1, @RequestParam("imageTwo") MultipartFile photo2,
+			@RequestParam("imageThree") MultipartFile photo3) throws InvalidParameters {
+		try {
+			return ResponseEntity.ok().body(siteserv.addSiteImages(siteRefKey, photo1, photo2, photo3));
+		} catch (Exception ex) {
+			throw new InvalidParameters(ex.getMessage());
+		}
+	}
+
+	@RequestMapping(method = RequestMethod.GET, path = "user/getReportStatus")
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<?> reportStatus() throws InvalidParameters {
+		try {
+			List<String> reportList = new ArrayList<>();
+			for (Enum<ReportTyoe> x : ReportTyoe.values()) {
+				reportList.add(x.toString());
+			}
+			return ResponseEntity.ok().body(reportList);
 		} catch (Exception ex) {
 			throw new InvalidParameters(ex.getMessage());
 		}

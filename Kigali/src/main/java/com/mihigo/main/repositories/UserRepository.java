@@ -23,8 +23,10 @@ public interface UserRepository extends JpaRepository<Users, Integer> {
 
 	@Query("From Users u where u.phone = :phone")
 	Users searchByPhone(@Param("phone") String phone);
-	
+
 	@Query("FROM Users u JOIN Site s ON u.site = s.id WHERE s.refKey = :ref")
 	List<Users> allUserBySiteRefKey(@Param(value = "ref") String siteRefKey);
+
+	Users findByUsername(String username);
 
 }

@@ -1,11 +1,14 @@
 package com.mihigo.main.payloads;
 
+import java.util.Collection;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.mihigo.main.models.Gender;
-import com.mihigo.main.models.UserRole;
+import com.mihigo.main.models.Role;
 import com.mihigo.main.models.UserStatus;
 
 @Component
@@ -17,9 +20,10 @@ public class UserOutputPayload {
 	private String sector;
 	private String names;
 	private Gender gender;
-	private UserRole role;
+	private Collection<Role> role;
 	private String username;
 	private String refKey;
+	@JsonFormat(shape = Shape.STRING,pattern = "dd-MM-yyyy hh:mm")
 	private Date date;
 	private UserStatus status;
 
@@ -28,7 +32,7 @@ public class UserOutputPayload {
 	}
 
 	public UserOutputPayload(String email, String phone, String province, String district, String sector, String names,
-			Gender gender, UserRole role, String username, String refKey, Date date, UserStatus status) {
+			Gender gender, Collection<Role> role, String username, String refKey, Date date, UserStatus status) {
 		this.email = email;
 		this.phone = phone;
 		this.province = province;
@@ -99,11 +103,11 @@ public class UserOutputPayload {
 		this.gender = gender;
 	}
 
-	public UserRole getRole() {
+	public Collection<Role> getRole() {
 		return role;
 	}
 
-	public void setRole(UserRole role) {
+	public void setRole(Collection<Role> role) {
 		this.role = role;
 	}
 

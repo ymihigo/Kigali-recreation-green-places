@@ -8,7 +8,7 @@ import com.mihigo.main.models.Users;
 
 public interface UserServices {
 	Users createAdminUser(String email, String phone, String province, String district, String sector, String names,
-			String gender, String role, String username, String password);
+			String gender,String username, String password);
 
 	Users createSiteUser(String email, String phone, String province, String district, String sector, String names,
 			String gender, String role, int site, String username, String password);
@@ -31,5 +31,9 @@ public interface UserServices {
 	List<Users> getAllUsers();
 
 	Users getUserByRefKey(String refKey);
+	
+	void addRoleToUser(String username,String role);
+	
+	Users getUser(String username);
 
 }

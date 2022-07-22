@@ -19,4 +19,13 @@ public interface VisitInterface {
 	List<VisitTable> findAllbyField(String field);
 
 	List<VisitTable> findAllWithPagination(int offset, int pagesize);
+
+	long countAll(String period);
+
+	long countAll(String period, String refKey);
+
+	double countRevenue(String period);
+
+	double countRevenue(String period, String refKey);
+
 }

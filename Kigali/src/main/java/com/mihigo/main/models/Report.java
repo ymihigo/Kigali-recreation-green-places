@@ -21,7 +21,7 @@ public class Report {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date doneOn = new Date();
+	private Date doneOn =new Date();
 	@ManyToOne
 	private Users uzer;
 	@Column(length = 1000)
@@ -31,10 +31,11 @@ public class Report {
 	private String doc;
 	@Column(unique = true)
 	private String refKey;
+
 	public Report() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
+
 	public Report(long id, Date doneOn, Users uzer, String detail, String doc, String refKey) {
 		this.id = id;
 		this.doneOn = doneOn;
@@ -43,53 +44,66 @@ public class Report {
 		this.doc = doc;
 		this.refKey = refKey;
 	}
+
 	public Report(Users uzer, String detail, String refKey) {
 		this.uzer = uzer;
 		this.detail = detail;
 		this.refKey = refKey;
 	}
+
 	public Report(Users uzer, String detail, String doc, String refKey) {
 		this.uzer = uzer;
 		this.detail = detail;
 		this.doc = doc;
 		this.refKey = refKey;
 	}
+
 	public long getId() {
 		return id;
 	}
+
 	public void setId(long id) {
 		this.id = id;
 	}
+
 	public Date getDoneOn() {
 		return doneOn;
 	}
+
 	public void setDoneOn(Date doneOn) {
 		this.doneOn = doneOn;
 	}
+
 	public Users getUzer() {
 		return uzer;
 	}
+
 	public void setUzer(Users uzer) {
 		this.uzer = uzer;
 	}
+
 	public String getDetail() {
 		return detail;
 	}
+
 	public void setDetail(String detail) {
 		this.detail = detail;
 	}
+
 	public String getDoc() {
 		return doc;
 	}
+
 	public void setDoc(String doc) {
 		this.doc = doc;
 	}
+
 	public String getRefKey() {
 		return refKey;
 	}
+
 	public void setRefKey(String refKey) {
 		this.refKey = refKey;
 	}
-	
-	
+
 }

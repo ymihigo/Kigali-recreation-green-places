@@ -1,21 +1,28 @@
 package com.mihigo.main.exceptionHandler;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
+import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 
 @Component
 public class ErrorDetail {
 	private String details;
 	private String message;
-	private Date timeStamp;
+	@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd-MM-yyyy hh:mm")
+	private LocalDateTime timeStamp;
 
 	public ErrorDetail() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public ErrorDetail(String details, String message, Date timeStamp) {
+	public ErrorDetail(String details, String message, LocalDateTime timeStamp) {
 		this.details = details;
 		this.message = message;
 		this.timeStamp = timeStamp;
@@ -37,11 +44,11 @@ public class ErrorDetail {
 		this.message = message;
 	}
 
-	public Date getTimeStamp() {
+	public LocalDateTime getTimeStamp() {
 		return timeStamp;
 	}
 
-	public void setTimeStamp(Date timeStamp) {
+	public void setTimeStamp(LocalDateTime timeStamp) {
 		this.timeStamp = timeStamp;
 	}
 

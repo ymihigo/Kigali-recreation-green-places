@@ -2,6 +2,8 @@ package com.mihigo.main.service.site;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.mihigo.main.models.Site;
 import com.mihigo.main.models.SiteStatus;
 import com.mihigo.main.models.Users;
@@ -13,8 +15,8 @@ public interface SiteInterface {
 
 	List<Site> allSite();
 
-	Site updateSite(int site_id, String email, String phone, String province, String district, String sector,
-			String name, String status, double price);
+	Site updateSite(String refKey, String email, String phone, String province, String district, String sector,
+			String name, String status, double price, String about);
 
 	Site searchByReferenceKey(String refKey);
 
@@ -25,5 +27,7 @@ public interface SiteInterface {
 	long countByStatus(SiteStatus status);
 
 	long countAllSites();
+
+	Site addSiteImages(String siteRefKey, MultipartFile photo1, MultipartFile photo2, MultipartFile photo3);
 
 }

@@ -14,6 +14,7 @@ public class Randomazation {
 			int index = (int) (alpha.length() * Math.random());
 			sb.append(alpha.charAt(index));
 		}
+		
 		return sb.toString();
 	}
 

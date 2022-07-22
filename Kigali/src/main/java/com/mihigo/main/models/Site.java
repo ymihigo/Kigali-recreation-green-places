@@ -42,25 +42,38 @@ public class Site extends Address implements Serializable {
 	private Date registrationDate = new Date();
 	@Column(unique = true)
 	private String refKey;
+	@Lob
+	@Column(columnDefinition = "MEDIUMBLOB")
+	private String photo_one;
+	@Lob
+	@Column(columnDefinition = "MEDIUMBLOB")
+	private String photo_two;
+	@Lob
+	@Column(columnDefinition = "MEDIUMBLOB")
+	private String photo_three;
+
+	private String about;
 
 	public Site() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	public Site(String email, String phone, String province, String district, String sector) {
 		super(email, phone, province, district, sector);
-		// TODO Auto-generated constructor stub
 	}
 
-	public Site(String email, String phone, String province, String district, String sector, int id, String name,
-			SiteStatus status, double price, String refKey) {
-		super(email, phone, province, district, sector);
+	public Site(int id, String name, SiteStatus status, double price, Date registrationDate, String refKey,
+			String photo_one, String photo_two, String photo_three, String about) {
 		this.id = id;
 		this.name = name;
 		this.status = status;
 		this.price = price;
+		this.registrationDate = registrationDate;
 		this.refKey = refKey;
+		this.photo_one = photo_one;
+		this.photo_two = photo_two;
+		this.photo_three = photo_three;
+		this.about = about;
 	}
 
 	public Site(String email, String phone, String province, String district, String sector, String name,
@@ -118,6 +131,30 @@ public class Site extends Address implements Serializable {
 
 	public void setRefKey(String refKey) {
 		this.refKey = refKey;
+	}
+
+	public String getPhoto_one() {
+		return photo_one;
+	}
+
+	public void setPhoto_one(String photo_one) {
+		this.photo_one = photo_one;
+	}
+
+	public String getPhoto_two() {
+		return photo_two;
+	}
+
+	public void setPhoto_two(String photo_two) {
+		this.photo_two = photo_two;
+	}
+
+	public String getPhoto_three() {
+		return photo_three;
+	}
+
+	public void setPhoto_three(String photo_three) {
+		this.photo_three = photo_three;
 	}
 
 }

@@ -1,17 +1,20 @@
 package com.mihigo.main.models;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
@@ -23,8 +26,8 @@ public class Users extends Person {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
-	@Enumerated(EnumType.STRING)
-	private UserRole role;
+	@ManyToMany(fetch = FetchType.EAGER)
+	private Collection<Role> roles = new ArrayList<>();
 	@Lob
 	@Column(columnDefinition = "MEDIUMBLOB")
 	private String image;
@@ -47,9 +50,9 @@ public class Users extends Person {
 
 	// Register Admin
 	public Users(String email, String phone, String province, String district, String sector, String names,
-			Gender gender, UserRole role, String username, String password, String refKey) {
+			Gender gender, Collection<Role> role, String username, String password, String refKey) {
 		super(email, phone, province, district, sector, names, gender);
-		this.role = role;
+		this.roles = role;
 		this.username = username;
 		this.password = password;
 		this.refKey = refKey;
@@ -57,9 +60,9 @@ public class Users extends Person {
 
 	// Register Managers
 	public Users(String email, String phone, String province, String district, String sector, String names,
-			Gender gender, UserRole role, Site site, String username, String password, String refKey) {
+			Gender gender, Collection<Role> role, Site site, String username, String password, String refKey) {
 		super(email, phone, province, district, sector, names, gender);
-		this.role = role;
+		this.roles = role;
 		this.site = site;
 		this.username = username;
 		this.password = password;
@@ -68,11 +71,11 @@ public class Users extends Person {
 
 //	for update and upload image
 	public Users(String email, String phone, String province, String district, String sector, String names,
-			Gender gender, int id, UserRole role, String image, UserStatus status, Site site, String username,
-			String password, String refKey) {
+			Gender gender, int id, Collection<Role> role, String image, UserStatus status, Site site,
+			String username, String password, String refKey) {
 		super(email, phone, province, district, sector, names, gender);
 		this.id = id;
-		this.role = role;
+		this.roles = role;
 		this.image = image;
 		this.status = status;
 		this.site = site;
@@ -89,12 +92,12 @@ public class Users extends Person {
 		this.id = id;
 	}
 
-	public UserRole getRole() {
-		return role;
+	public Collection<Role> getRole() {
+		return roles;
 	}
 
-	public void setRole(UserRole role) {
-		this.role = role;
+	public void setRole(Collection<Role> role) {
+		this.roles = role;
 	}
 
 	public String getImage() {
