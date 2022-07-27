@@ -20,8 +20,10 @@ public class Report {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
+	@Column(nullable = false)
+	private String reportTitle;
 	@Temporal(TemporalType.TIMESTAMP)
-	private Date doneOn =new Date();
+	private Date doneOn = new Date();
 	@ManyToOne
 	private Users uzer;
 	@Column(length = 1000)
@@ -36,8 +38,9 @@ public class Report {
 		super();
 	}
 
-	public Report(long id, Date doneOn, Users uzer, String detail, String doc, String refKey) {
+	public Report(long id, String reportTitle, Date doneOn, Users uzer, String detail, String doc, String refKey) {
 		this.id = id;
+		this.reportTitle = reportTitle;
 		this.doneOn = doneOn;
 		this.uzer = uzer;
 		this.detail = detail;
@@ -45,13 +48,15 @@ public class Report {
 		this.refKey = refKey;
 	}
 
-	public Report(Users uzer, String detail, String refKey) {
+	public Report(String reportTitle, Users uzer, String detail, String refKey) {
+		this.reportTitle = reportTitle;
 		this.uzer = uzer;
 		this.detail = detail;
 		this.refKey = refKey;
 	}
 
-	public Report(Users uzer, String detail, String doc, String refKey) {
+	public Report(String reportTitle, Users uzer, String detail, String doc, String refKey) {
+		this.reportTitle = reportTitle;
 		this.uzer = uzer;
 		this.detail = detail;
 		this.doc = doc;
@@ -104,6 +109,14 @@ public class Report {
 
 	public void setRefKey(String refKey) {
 		this.refKey = refKey;
+	}
+
+	public String getReportTitle() {
+		return reportTitle;
+	}
+
+	public void setReportTitle(String reportTitle) {
+		this.reportTitle = reportTitle;
 	}
 
 }

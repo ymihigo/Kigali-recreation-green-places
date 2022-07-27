@@ -9,9 +9,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.mihigo.main.models.Report;
-import com.mihigo.main.models.Site;
 import com.mihigo.main.models.Users;
-import com.mihigo.main.payloads.ReportPayload;
 
 @Repository
 public interface ReportRepository extends JpaRepository<Report, Long> {
@@ -20,8 +18,9 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
 	List<Report> findAllByUzer(Users uzer);
 
-	@Query("FROM Report r where r.doneOn BETWEEN :from AND :to")
-	List<ReportPayload> findAllByPeriod(@Param("from") Date from, @Param("to") Date to);
-//	
-//	List<Report> findAllByPeriod(String from, String to, String siteRefKey);
+	@Query("FROM Report r where  r.doneOn BETWEEN :from AND :to ORDER BY r.doneOn DESC")
+	List<Report> findAllByPeriod(@Param("from") Date from, @Param("to") Date to);
+
+	@Query("FROM Report r where r.uzer= :uzer AND (r.doneOn BETWEEN :from AND :to) ORDER BY r.doneOn DESC")
+	List<Report> findAllByPeriod(@Param("from") Date from, @Param("to") Date to, @Param("uzer") Users u);
 }

@@ -14,6 +14,7 @@ import lombok.Data;
 @Data
 @Component
 public class ReportPayload {
+	private String reportTitle;
 	private UserOutputPayload uzer;
 	private SitePayload site;
 	private String detail;
@@ -28,8 +29,9 @@ public class ReportPayload {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ReportPayload(UserOutputPayload uzer, SitePayload site, String detail, String doc, Date doneOn,
-			String refKey) {
+	public ReportPayload(String reportTitle, UserOutputPayload uzer, SitePayload site, String detail, String doc,
+			Date doneOn, String refKey) {
+		this.reportTitle = reportTitle;
 		this.uzer = uzer;
 		this.site = site;
 		this.detail = detail;
@@ -85,5 +87,13 @@ public class ReportPayload {
 	public void setRefKey(String refKey) {
 		this.refKey = refKey;
 	}
-	
+
+	public String getReportTitle() {
+		return reportTitle;
+	}
+
+	public void setReportTitle(String reportTitle) {
+		this.reportTitle = reportTitle;
+	}
+
 }

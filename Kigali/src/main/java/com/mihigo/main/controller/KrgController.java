@@ -83,23 +83,6 @@ public class KrgController {
 		}
 	}
 
-//	@RequestMapping(method = RequestMethod.POST, path = "siteAdmin")
-//	@CrossOrigin(origins = "*")
-//	public ResponseEntity<?> createSiteUser(@RequestBody UserInputPayload user) throws InvalidParameters {
-//		try {
-//			Users uz = uzer.createAdminUser(user.getEmail(), user.getPhone(), user.getProvince(), user.getDistrict(),
-//					user.getSector(), user.getNames(), user.getGender(), user.getRole(), user.getUsername(),
-//					user.getPassword());
-//			UserOutputPayload outz = new UserOutputPayload(uz.getEmail(), uz.getPhone(), uz.getProvince(),
-//					uz.getDistrict(), uz.getSector(), uz.getNames(), uz.getGender(), uz.getRole(), uz.getUsername(),
-//					uz.getRefKey(), uz.getRegDate(), uz.getStatus());
-//
-//			return new ResponseEntity<UserOutputPayload>(outz, HttpStatus.OK);
-//		} catch (Exception ex) {
-//			throw new InvalidParameters(ex.getMessage());
-//		}
-//	}
-
 	@RequestMapping(method = RequestMethod.GET, path = "user/getUser")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> getUserByUsername(@RequestParam("username") String username) throws InvalidParameters {
@@ -383,15 +366,16 @@ public class KrgController {
 
 	@PostMapping("user/report")
 	@CrossOrigin(origins = "*")
-	public ResponseEntity<?> createReport(@RequestParam(value = "userRef", required = true) String userRef,
+	public ResponseEntity<?> createReport(@RequestParam("reportTitle") String reportTitle,
+			@RequestParam(value = "userRef", required = true) String userRef,
 			@RequestParam(value = "report", required = true) String report,
 			@RequestParam(value = "document", required = false) MultipartFile document) {
 		try {
 			if (document == null) {
-				report_service.createReport(userRef, report);
+				report_service.createReport(reportTitle, userRef, report);
 				return ResponseEntity.ok().build();
 			} else {
-				report_service.createReport(userRef, report, document);
+				report_service.createReport(reportTitle, userRef, report, document);
 				return ResponseEntity.ok().build();
 			}
 		} catch (Exception ex) {
@@ -488,6 +472,23 @@ public class KrgController {
 				reportList.add(x.toString());
 			}
 			return ResponseEntity.ok().body(reportList);
+		} catch (Exception ex) {
+			throw new InvalidParameters(ex.getMessage());
+		}
+	}
+
+	@GetMapping(value = { "admin/allreports/{from}/{to}", "user/{from}/{to}/{refKey}" })
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<?> getReport(@PathVariable(value = "from", required = true) String from,
+			@PathVariable(value = "to", required = true) String to,
+			@PathVariable(value = "refKey", required = false) String refKey) throws InvalidParameters {
+		try {
+			if (refKey == null) {
+				return ResponseEntity.ok().body(report_service.getAllReport(from, to));
+			} else {
+//				return ResponseEntity.ok().body(report_service.getAllReports());
+				return ResponseEntity.ok().body(report_service.getAllReport(from, to, refKey));
+			}
 		} catch (Exception ex) {
 			throw new InvalidParameters(ex.getMessage());
 		}

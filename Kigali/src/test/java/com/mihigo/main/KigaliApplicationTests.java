@@ -47,8 +47,9 @@ class KigaliApplicationTests {
 	@Test
 	void contextLoads() throws ParseException {
 
-		Date from = new SimpleDateFormat("dd/MM/yyy HH").parse("14/06/2010 01:32");
-		Date to = new Date();
+		
+		Date from = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2022-07-16T15:38");
+		Date to = new SimpleDateFormat("yyyy-MM-dd").parse("2022-07-19");
 
 		System.out.println(reporepo.findAllByPeriod(from, to).size());
 //		System.out.println(from);
