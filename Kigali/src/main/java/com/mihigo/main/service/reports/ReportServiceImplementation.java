@@ -68,8 +68,8 @@ public class ReportServiceImplementation implements ReportServiceInterface {
 			}
 			String extension = StringUtils.getFilenameExtension(document.getOriginalFilename());
 
-			if (!extension.endsWith("docx")) {
-				throw new RuntimeException("Only word document is allowed here");
+			if (!extension.endsWith("pdf")) {
+				throw new RuntimeException("Only pdf document is allowed here");
 			}
 
 			if (userRef.isBlank() || report.isBlank() || title.isBlank()) {

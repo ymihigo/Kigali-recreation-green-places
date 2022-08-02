@@ -88,10 +88,19 @@ public class KrgController {
 	public ResponseEntity<?> getUserByUsername(@RequestParam("username") String username) throws InvalidParameters {
 		try {
 			Users uz = uzer.getUser(username);
+			Role rol = uz.getRole().stream().findFirst().get();
+
+			String siteRefKey = "";
+
+			if (rol.getName().equalsIgnoreCase("Admin")) {
+				siteRefKey = "";
+			} else {
+				siteRefKey = uz.getSite().getRefKey();
+			}
 			return ResponseEntity.ok()
 					.body(new UserOutputPayload(uz.getEmail(), uz.getPhone(), uz.getProvince(), uz.getDistrict(),
 							uz.getSector(), uz.getNames(), uz.getGender(), uz.getRole(), uz.getUsername(),
-							uz.getRefKey(), uz.getRegDate(), uz.getStatus()));
+							uz.getRefKey(), uz.getRegDate(), uz.getStatus(), siteRefKey));
 		} catch (Exception ex) {
 			throw new InvalidParameters(ex.getMessage());
 		}
@@ -151,7 +160,7 @@ public class KrgController {
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.GET, path = "all_provinces")
+	@RequestMapping(method = RequestMethod.GET, path = "/all/all_provinces")
 	@CrossOrigin(origins = "*")
 	public List<?> getAllProvinces() throws InvalidParameters {
 		try {
@@ -161,7 +170,7 @@ public class KrgController {
 		}
 	}
 
-	@GetMapping("/getDistrict")
+	@GetMapping("/all/getDistrict")
 	@CrossOrigin(origins = "*")
 	public List<?> getDistrictByProvinces(@RequestParam(value = "id") int id) throws InvalidParameters {
 		try {
@@ -172,7 +181,7 @@ public class KrgController {
 		}
 	}
 
-	@GetMapping("getSectors")
+	@GetMapping("/all/getSectors")
 	@CrossOrigin(origins = "*")
 	public List<?> getSectorsByDistrict(@RequestParam(value = "id") int id) throws InvalidParameters {
 		try {
@@ -193,7 +202,7 @@ public class KrgController {
 		}
 	}
 
-	@GetMapping("/getGender")
+	@GetMapping("/all/getGender")
 	@CrossOrigin(origins = "*")
 	public List<String> usergender() throws InvalidParameters {
 		try {
@@ -221,7 +230,7 @@ public class KrgController {
 		}
 	}
 
-	@GetMapping("/getSiteByRef")
+	@GetMapping("user/getSiteByRef")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> getSiteByrefKey(@RequestParam(value = "ref") String ref) throws InvalidParameters {
 		try {
@@ -383,7 +392,7 @@ public class KrgController {
 		}
 	}
 
-	@PostMapping("/visit")
+	@PostMapping("user/visit")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> visitBySite(@RequestParam(value = "name", required = true) String name,
 			@RequestParam(value = "gender", required = true) Gender gender,
@@ -420,6 +429,18 @@ public class KrgController {
 			return ResponseEntity.ok().body(li);
 		} catch (Exception ex) {
 			throw new InvalidParameters(ex.getMessage());
+		}
+	}
+
+	@GetMapping(path = "user/allVisitors")
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<?> allVisitorsBySite(@RequestParam("from") String from, @RequestParam("to") String to,
+			@RequestParam("siteRefKey") String siteRefKey) {
+		try {
+			List<VisitTable> li = visitService.visitorsByPeriodAndSite(from, to, siteRefKey);
+			return ResponseEntity.ok().body(li);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
 		}
 	}
 
@@ -486,9 +507,18 @@ public class KrgController {
 			if (refKey == null) {
 				return ResponseEntity.ok().body(report_service.getAllReport(from, to));
 			} else {
-//				return ResponseEntity.ok().body(report_service.getAllReports());
 				return ResponseEntity.ok().body(report_service.getAllReport(from, to, refKey));
 			}
+		} catch (Exception ex) {
+			throw new InvalidParameters(ex.getMessage());
+		}
+	}
+
+	@GetMapping(path = "admin/topvisiting")
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<?> topVisiting(@RequestParam("period") String period) throws InvalidParameters {
+		try {
+			return ResponseEntity.ok().body(visitService.topselling(period));
 		} catch (Exception ex) {
 			throw new InvalidParameters(ex.getMessage());
 		}

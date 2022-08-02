@@ -1,6 +1,9 @@
 package com.mihigo.main.service.visitsite;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +15,11 @@ import org.springframework.stereotype.Service;
 import com.mihigo.main.models.Gender;
 import com.mihigo.main.models.Site;
 import com.mihigo.main.models.VisitSite;
+import com.mihigo.main.payloads.TopVisitings;
 import com.mihigo.main.payloads.VisitTable;
 import com.mihigo.main.repositories.SiteRepository;
 import com.mihigo.main.repositories.VisitRepository;
+import com.mihigo.main.service.site.SiteInterface;
 
 @Service
 public class VisitInterfaceImplementation implements VisitInterface {
@@ -24,6 +29,9 @@ public class VisitInterfaceImplementation implements VisitInterface {
 
 	@Autowired
 	private VisitRepository vr;
+
+	@Autowired
+	private SiteInterface site_serv;
 
 	List<VisitTable> output = new ArrayList<>();
 
@@ -89,7 +97,7 @@ public class VisitInterfaceImplementation implements VisitInterface {
 			li = vr.findAllByOrderByIdDesc();
 			output.clear();
 			li.forEach(x -> {
-				output.add(new VisitTable(x.getNames(), x.getGender(), x.getDate()));
+				output.add(new VisitTable(x.getNames(), x.getGender(), x.getDate(), x.getPaidAmount()));
 			});
 			return output;
 		} catch (Exception ex) {
@@ -102,7 +110,7 @@ public class VisitInterfaceImplementation implements VisitInterface {
 		try {
 			li = vr.findAll(Sort.by(Sort.Direction.DESC, field));
 			li.forEach(x -> {
-				output.add(new VisitTable(x.getNames(), x.getGender(), x.getDate()));
+				output.add(new VisitTable(x.getNames(), x.getGender(), x.getDate(), x.getPaidAmount()));
 			});
 			return output;
 		} catch (Exception ex) {
@@ -116,7 +124,7 @@ public class VisitInterfaceImplementation implements VisitInterface {
 			Page<VisitSite> allPageable = vr.findAll(PageRequest.of(offset, pagesize));
 			output.clear();
 			allPageable.forEach(x -> {
-				output.add(new VisitTable(x.getNames(), x.getGender(), x.getDate()));
+				output.add(new VisitTable(x.getNames(), x.getGender(), x.getDate(), x.getPaidAmount()));
 			});
 			return output;
 		} catch (Exception ex) {
@@ -162,7 +170,7 @@ public class VisitInterfaceImplementation implements VisitInterface {
 	@Override
 	public double countRevenue(String period) {
 		try {
-			
+
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage());
 		}
@@ -173,6 +181,54 @@ public class VisitInterfaceImplementation implements VisitInterface {
 	public double countRevenue(String period, String refKey) {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public List<TopVisitings> topselling(String period) {
+		try {
+			if (period.isBlank()) {
+				throw new RuntimeException("Invalid period");
+			}
+
+			String peri = period.toUpperCase();
+
+//			if (peri != "TODAY" || peri != "MONTH" || peri != "YEAR") {
+//				throw new RuntimeException("Invalid period period must be ex: TODAY or MONTH or YEAR");
+//			}
+
+			if (peri.equalsIgnoreCase("TODAY")) {
+				return vr.topVisitingDay();
+			}
+			if (peri.equalsIgnoreCase("MONTH")) {
+				return vr.topVisitingMonth();
+			}
+			if (peri.equalsIgnoreCase("YEAR")) {
+				return vr.topVisitingYear();
+			} else {
+				return new ArrayList<>();
+			}
+
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
+
+	@Override
+	public List<VisitTable> visitorsByPeriodAndSite(String from, String too, String siteRefKey) {
+		try {
+			Date fromz = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(from);
+			Date toz = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse(too);
+
+			if (fromz.after(toz)) {
+				throw new RuntimeException("Invalid dates");
+			}
+
+			site_serv.searchByReferenceKey(siteRefKey);
+
+			return vr.visitorsByPeriodAndSite(fromz, toz, siteRefKey);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
 	}
 
 }

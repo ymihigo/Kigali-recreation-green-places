@@ -13,15 +13,17 @@ public class VisitTable {
 	private Gender gender;
 	@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd-MM-yyyy hh:mm")
 	private Date date;
+	private double amount;
 
 	public VisitTable() {
 		super();
 	}
 
-	public VisitTable(String names, Gender gender, Date date) {
+	public VisitTable(String names, Gender gender, Date date,double amount) {
 		this.names = names;
 		this.gender = gender;
 		this.date = date;
+		this.amount=amount;
 	}
 
 	public String getNames() {
@@ -46,6 +48,14 @@ public class VisitTable {
 
 	public void setDate(Date date) {
 		this.date = date;
+	}
+
+	public double getAmount() {
+		return amount;
+	}
+
+	public void setAmount(double amount) {
+		this.amount = amount;
 	}
 
 }

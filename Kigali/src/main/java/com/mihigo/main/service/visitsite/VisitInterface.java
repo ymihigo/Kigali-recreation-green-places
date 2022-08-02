@@ -1,10 +1,12 @@
 
 package com.mihigo.main.service.visitsite;
 
+import java.util.Date;
 import java.util.List;
 
 import com.mihigo.main.models.Gender;
 import com.mihigo.main.models.VisitSite;
+import com.mihigo.main.payloads.TopVisitings;
 import com.mihigo.main.payloads.VisitTable;
 
 public interface VisitInterface {
@@ -27,5 +29,9 @@ public interface VisitInterface {
 	double countRevenue(String period);
 
 	double countRevenue(String period, String refKey);
+
+	List<TopVisitings> topselling(String period);
+
+	List<VisitTable> visitorsByPeriodAndSite(String from, String too, String siteRefKey);
 
 }

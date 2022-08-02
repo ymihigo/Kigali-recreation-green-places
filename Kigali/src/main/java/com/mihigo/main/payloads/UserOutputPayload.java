@@ -23,14 +23,14 @@ public class UserOutputPayload {
 	private Collection<Role> role;
 	private String username;
 	private String refKey;
-	@JsonFormat(shape = Shape.STRING,pattern = "dd-MM-yyyy hh:mm")
+	@JsonFormat(shape = Shape.STRING, pattern = "dd-MM-yyyy hh:mm")
 	private Date date;
 	private UserStatus status;
+	private String siteRefKey;
 
 	public UserOutputPayload() {
 		super();
 	}
-
 	public UserOutputPayload(String email, String phone, String province, String district, String sector, String names,
 			Gender gender, Collection<Role> role, String username, String refKey, Date date, UserStatus status) {
 		this.email = email;
@@ -45,6 +45,24 @@ public class UserOutputPayload {
 		this.refKey = refKey;
 		this.date = date;
 		this.status = status;
+	}
+
+	public UserOutputPayload(String email, String phone, String province, String district, String sector, String names,
+			Gender gender, Collection<Role> role, String username, String refKey, Date date, UserStatus status,
+			String siteRefKey) {
+		this.email = email;
+		this.phone = phone;
+		this.province = province;
+		this.district = district;
+		this.sector = sector;
+		this.names = names;
+		this.gender = gender;
+		this.role = role;
+		this.username = username;
+		this.refKey = refKey;
+		this.date = date;
+		this.status = status;
+		this.siteRefKey = siteRefKey;
 	}
 
 	public String getEmail() {
@@ -141,6 +159,14 @@ public class UserOutputPayload {
 
 	public void setStatus(UserStatus status) {
 		this.status = status;
+	}
+
+	public String getSiteRefKey() {
+		return siteRefKey;
+	}
+
+	public void setSiteRefKey(String siteRefKey) {
+		this.siteRefKey = siteRefKey;
 	}
 
 }
