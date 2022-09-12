@@ -85,7 +85,7 @@ public class UserServiceImplementation implements UserServices, UserDetailsServi
 				throw new RuntimeException("Invalid phone number format");
 			}
 
-//			String hashedPassword = hashPass.hashPassword(password);
+//			String hashedPassword = hashPass.hashPassword(pas sword);
 			String hashedPassword = PasswordEncoder.encode(password);
 
 			String refkey = ran.random(21);

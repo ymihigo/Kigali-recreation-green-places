@@ -1,6 +1,7 @@
 package com.mihigo.main.models;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,9 +20,13 @@ import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 
 import org.hibernate.annotations.CollectionId;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Type;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonFormat.Shape;
 import com.mihigo.main.tools.Randomazation;
 
 @SuppressWarnings("unused")
@@ -39,20 +44,20 @@ public class Site extends Address implements Serializable {
 	private SiteStatus status;
 	private double price = 0;
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(shape = Shape.STRING,pattern = "dd/MM/yyyy")
 	private Date registrationDate = new Date();
 	@Column(unique = true)
 	private String refKey;
-	@Lob
-	@Column(columnDefinition = "MEDIUMBLOB")
-	private String photo_one;
-	@Lob
-	@Column(columnDefinition = "MEDIUMBLOB")
-	private String photo_two;
-	@Lob
-	@Column(columnDefinition = "MEDIUMBLOB")
-	private String photo_three;
-
+	@Column(columnDefinition = "TEXT")
 	private String about;
+	private String longitude;
+	private String latitude;
+	@ElementCollection
+	@Lob
+	@Column(columnDefinition = "MEDIUMBLOB")
+	private List<String> photos;
+	@Type(type = "yes_no")
+	private boolean bookable;
 
 	public Site() {
 		super();
@@ -63,26 +68,45 @@ public class Site extends Address implements Serializable {
 	}
 
 	public Site(int id, String name, SiteStatus status, double price, Date registrationDate, String refKey,
-			String photo_one, String photo_two, String photo_three, String about) {
+			String about, String longitude, String latitude, List<String> photos, boolean bookable) {
+		super();
 		this.id = id;
 		this.name = name;
 		this.status = status;
 		this.price = price;
 		this.registrationDate = registrationDate;
 		this.refKey = refKey;
-		this.photo_one = photo_one;
-		this.photo_two = photo_two;
-		this.photo_three = photo_three;
 		this.about = about;
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.photos = photos;
+		this.bookable = bookable;
 	}
 
 	public Site(String email, String phone, String province, String district, String sector, String name,
-			SiteStatus status, double price, String refKey) {
+			SiteStatus status, double price, String refKey, String about, String longitude, String latitude,
+			boolean bookable) {
 		super(email, phone, province, district, sector);
 		this.name = name;
 		this.status = status;
 		this.price = price;
 		this.refKey = refKey;
+		this.about = about;
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.bookable = bookable;
+	}
+
+	public Site(String name, SiteStatus status, double price, String refKey, String about, String longitude,
+			String latitude, boolean bookable) {
+		this.name = name;
+		this.status = status;
+		this.price = price;
+		this.refKey = refKey;
+		this.about = about;
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.bookable = bookable;
 	}
 
 	public int getId() {
@@ -133,28 +157,48 @@ public class Site extends Address implements Serializable {
 		this.refKey = refKey;
 	}
 
-	public String getPhoto_one() {
-		return photo_one;
+	public String getAbout() {
+		return about;
 	}
 
-	public void setPhoto_one(String photo_one) {
-		this.photo_one = photo_one;
+	public void setAbout(String about) {
+		this.about = about;
 	}
 
-	public String getPhoto_two() {
-		return photo_two;
+	public String getLongitude() {
+		return longitude;
 	}
 
-	public void setPhoto_two(String photo_two) {
-		this.photo_two = photo_two;
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
 	}
 
-	public String getPhoto_three() {
-		return photo_three;
+	public String getLatitude() {
+		return latitude;
 	}
 
-	public void setPhoto_three(String photo_three) {
-		this.photo_three = photo_three;
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
 	}
+
+	public List<String> getPhotos() {
+		return photos;
+	}
+
+	public void setPhotos(List<String> photos) {
+		this.photos = photos;
+	}
+
+	public boolean isBookable() {
+		return bookable;
+	}
+
+	public void setBookable(boolean bookable) {
+		this.bookable = bookable;
+	}
+
+	
+	
+	
 
 }

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 
 @Entity
 @Component
-public class VisitSite extends Person implements Serializable {
+public class Visitors extends Person implements Serializable {
 	@Version
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -28,20 +28,20 @@ public class VisitSite extends Person implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date date = new Date();
 
-	public VisitSite() {
+	public Visitors() {
 		super();
 	}
 
-	public VisitSite(String email, String phone, String province, String district, String sector, String names,
+	public Visitors(String email, String phone, String province, String district, String sector, String names,
 			Gender gender) {
 		super(email, phone, province, district, sector, names, gender);
 	}
 
-	public VisitSite(String email, String phone, String province, String district, String sector) {
+	public Visitors(String email, String phone, String province, String district, String sector) {
 		super(email, phone, province, district, sector);
 	}
 
-	public VisitSite(String email, String phone, String province, String district, String sector, String names,
+	public Visitors(String email, String phone, String province, String district, String sector, String names,
 			Gender gender, long id, Site site, double paidAmount, Date date) {
 		super(email, phone, province, district, sector, names, gender);
 		this.id = id;
@@ -50,7 +50,7 @@ public class VisitSite extends Person implements Serializable {
 		this.date = date;
 	}
 
-	public VisitSite(String email, String phone, String province, String district, String sector, String names,
+	public Visitors(String email, String phone, String province, String district, String sector, String names,
 			Gender gender, Site site, double paidAmount) {
 		super(email, phone, province, district, sector, names, gender);
 		this.site = site;
@@ -59,12 +59,12 @@ public class VisitSite extends Person implements Serializable {
 	
 	
 
-	public VisitSite(Site site, double paidAmount) {
+	public Visitors(Site site, double paidAmount) {
 		this.site = site;
 		this.paidAmount = paidAmount;
 	}
 
-	public VisitSite(String names, Gender gender, Site site, double paidAmount) {
+	public Visitors(String names, Gender gender, Site site, double paidAmount) {
 		super(names, gender);
 		this.site = site;
 		this.paidAmount = paidAmount;

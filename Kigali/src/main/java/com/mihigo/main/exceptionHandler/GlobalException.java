@@ -19,20 +19,20 @@ public class GlobalException {
 
 	@ExceptionHandler(InvalidParameters.class)
 	public ResponseEntity<?> invalidParameterExceptionHandling(InvalidParameters exception, WebRequest request) {
-		ErrorDetail error = new ErrorDetail(request.getDescription(false), exception.getMessage(), LocalDateTime.now());
+		ErrorDetail error = new ErrorDetail(request.getDescription(false), exception.getMessage(), new Date());
 		return new ResponseEntity<ErrorDetail>(error, HttpStatus.NOT_ACCEPTABLE);
 
 	}
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<?> logicError(InvalidParameters exception, WebRequest request) {
-		ErrorDetail error = new ErrorDetail(request.getDescription(false), exception.getMessage(), LocalDateTime.now());
+		ErrorDetail error = new ErrorDetail(request.getDescription(false), exception.getMessage(), new Date());
 		return new ResponseEntity<ErrorDetail>(error, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(RuntimeException.class)
 	public ResponseEntity<?> globalException(Exception exception, WebRequest request) {
-		ErrorDetail error = new ErrorDetail(request.getDescription(false), exception.getMessage(), LocalDateTime.now());
+		ErrorDetail error = new ErrorDetail(request.getDescription(false), exception.getMessage(), new Date());
 		return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
 	}
 

@@ -1,5 +1,7 @@
 package com.mihigo.main.service.site;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
@@ -29,10 +31,11 @@ public class SiteInterfaceImplementation implements SiteInterface {
 
 	@Override
 	public Site createSite(String email, String phone, String province, String district, String sector, String name,
-			String status, double price) {
+			String status, double price, String about, String longitude, String latitude,boolean bookable) {
 		try {
 			if (email.isEmpty() || phone.isEmpty() || province.isEmpty() || district.isEmpty() || sector.isEmpty()
-					|| name.isEmpty() || status.isEmpty()) {
+					|| name.isEmpty() || status.isEmpty() || about.isEmpty() || longitude.isEmpty()
+					|| latitude.isEmpty()) {
 				throw new RuntimeException("Please fill all requirements ");
 			}
 			if (price < 0) {
@@ -46,7 +49,8 @@ public class SiteInterfaceImplementation implements SiteInterface {
 			}
 			SiteStatus ss = SiteStatus.valueOf(status);
 
-			return siterepo.save(new Site(email, phone, province, district, sector, name, ss, price, rand.random(16)));
+			return siterepo.save(new Site(email, phone, province, district, sector, name, ss, price, rand.random(16),
+					about, longitude, latitude,bookable));
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage());
@@ -130,38 +134,34 @@ public class SiteInterfaceImplementation implements SiteInterface {
 	}
 
 	@Override
-	public Site addSiteImages(String siteRefKey, MultipartFile photo1, MultipartFile photo2, MultipartFile photo3) {
+	public Site addSiteImages(String siteRefKey, List<MultipartFile> photos) {
 		try {
+			Site sit = searchByReferenceKey(siteRefKey);
+			List<String> pics = new ArrayList<>();
 
-			String typ = photo1.getContentType();
-			String typ2 = photo2.getContentType();
-			String typ3 = photo3.getContentType();
-			if (typ.startsWith("image/") && typ2.startsWith("image/") && typ3.startsWith("image/")) {
-				String img1 = StringUtils.cleanPath(photo1.getOriginalFilename());
-				String img2 = StringUtils.cleanPath(photo2.getOriginalFilename());
-				String img3 = StringUtils.cleanPath(photo3.getOriginalFilename());
-
-				if (img1.contains("..") || img2.contains("..") || img3.contains("..")) {
-					throw new RuntimeException("All images are required");
+			photos.forEach(x -> {
+				String typ = x.getContentType();
+				if (!typ.startsWith("image/")) {
+					throw new RuntimeException("Only pictures are allowed here");
 				}
 
-				Site sit = searchByReferenceKey(siteRefKey);
+				String img = StringUtils.cleanPath(x.getOriginalFilename());
 
-				String image1 = Base64.getEncoder().encodeToString(photo1.getBytes());
-				String image2 = Base64.getEncoder().encodeToString(photo2.getBytes());
-				String image3 = Base64.getEncoder().encodeToString(photo3.getBytes());
+				if (img.contains("..")) {
+					throw new RuntimeException("Please select image");
+				}
 
-				sit.setPhoto_one(image1);
-				sit.setPhoto_two(image2);
-				sit.setPhoto_three(image3);
-
-				return siterepo.saveAndFlush(sit);
-			} else {
-				throw new RuntimeException("Invalid file type");
-			}
-
-		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage());
+				try {
+					String imagez = Base64.getEncoder().encodeToString(x.getBytes());
+					pics.add(imagez);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				sit.setPhotos(pics);
+			});
+			return siterepo.saveAndFlush(sit);
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
 		}
 	}
 

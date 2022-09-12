@@ -15,14 +15,14 @@ public class ErrorDetail {
 	private String details;
 	private String message;
 	@JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd-MM-yyyy hh:mm")
-	private LocalDateTime timeStamp;
+	private Date timeStamp;
 
 	public ErrorDetail() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
-	public ErrorDetail(String details, String message, LocalDateTime timeStamp) {
+	public ErrorDetail(String details, String message, Date timeStamp) {
 		this.details = details;
 		this.message = message;
 		this.timeStamp = timeStamp;
@@ -44,11 +44,11 @@ public class ErrorDetail {
 		this.message = message;
 	}
 
-	public LocalDateTime getTimeStamp() {
+	public Date getTimeStamp() {
 		return timeStamp;
 	}
 
-	public void setTimeStamp(LocalDateTime timeStamp) {
+	public void setTimeStamp(Date timeStamp) {
 		this.timeStamp = timeStamp;
 	}
 

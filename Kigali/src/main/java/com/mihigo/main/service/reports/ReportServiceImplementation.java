@@ -111,7 +111,7 @@ public class ReportServiceImplementation implements ReportServiceInterface {
 								x.getUzer().getSite().getProvince(), x.getUzer().getSite().getDistrict(),
 								x.getUzer().getSite().getSector(), x.getUzer().getSite().getName(),
 								x.getUzer().getSite().getStatus().toString(), x.getUzer().getSite().getPrice(),
-								x.getUzer().getSite().getRefKey()),
+								x.getUzer().getSite().getRefKey(), x.getUzer().getSite().isBookable()),
 						x.getDetail(), x.getDoc(), x.getDoneOn(), x.getRefKey()));
 			});
 			return resu;
@@ -143,7 +143,7 @@ public class ReportServiceImplementation implements ReportServiceInterface {
 								x.getUzer().getSite().getProvince(), x.getUzer().getSite().getDistrict(),
 								x.getUzer().getSite().getSector(), x.getUzer().getSite().getName(),
 								x.getUzer().getSite().getStatus().toString(), x.getUzer().getSite().getPrice(),
-								x.getUzer().getSite().getRefKey()),
+								x.getUzer().getSite().getRefKey(), x.getUzer().getSite().isBookable()),
 						x.getDetail(), x.getDoc(), x.getDoneOn(), x.getRefKey()));
 			});
 			return resu;
@@ -167,7 +167,7 @@ public class ReportServiceImplementation implements ReportServiceInterface {
 						x.getUzer().getSite().getProvince(), x.getUzer().getSite().getDistrict(),
 						x.getUzer().getSite().getSector(), x.getUzer().getSite().getName(),
 						x.getUzer().getSite().getStatus().toString(), x.getUzer().getSite().getPrice(),
-						x.getUzer().getSite().getRefKey());
+						x.getUzer().getSite().getRefKey(), x.getUzer().getSite().isBookable());
 				resu.add(new ReportPayload(x.getReportTitle(), uza, sitee, x.getDetail(), x.getDoc(), x.getDoneOn(),
 						x.getRefKey()));
 			});

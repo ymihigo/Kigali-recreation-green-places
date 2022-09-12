@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.mihigo.main.models.Site;
-import com.mihigo.main.models.VisitSite;
+import com.mihigo.main.models.Visitors;
 import com.mihigo.main.payloads.VisitTable;
 import com.mihigo.main.repositories.ReportRepository;
 import com.mihigo.main.repositories.SiteRepository;
@@ -47,11 +47,12 @@ class KigaliApplicationTests {
 	@Test
 	void contextLoads() throws ParseException {
 
-		
-		Date from = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2022-07-16T15:38");
-		Date to = new SimpleDateFormat("yyyy-MM-dd").parse("2022-07-19");
+//		System.out.println(viv.countRevenue("YEAR", "VWxb2zSELezJf9wA"));
 
-		System.out.println(reporepo.findAllByPeriod(from, to).size());
+//		Date from = new SimpleDateFormat("yyyy-MM-dd HH:mm").parse("2022-07-16T15:38");
+//		Date to = new SimpleDateFormat("yyyy-MM-dd").parse("2022-07-19");
+
+//		System.out.println(reporepo.findAllByPeriod(from, to).size());
 //		System.out.println(from);
 	}
 

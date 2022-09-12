@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.mihigo.main.models.Gender;
 import com.mihigo.main.models.Site;
-import com.mihigo.main.models.VisitSite;
+import com.mihigo.main.models.Visitors;
 import com.mihigo.main.payloads.TopVisitings;
 import com.mihigo.main.payloads.VisitTable;
 import com.mihigo.main.repositories.SiteRepository;
@@ -35,10 +35,10 @@ public class VisitInterfaceImplementation implements VisitInterface {
 
 	List<VisitTable> output = new ArrayList<>();
 
-	List<VisitSite> li = new ArrayList<>();
+	List<Visitors> li = new ArrayList<>();
 
 	@Override
-	public VisitSite visitByCamera(String key) {
+	public Visitors visitByCamera(String key) {
 		try {
 			if (key.isBlank()) {
 				throw new RuntimeException("Invalid key");
@@ -50,7 +50,7 @@ public class VisitInterfaceImplementation implements VisitInterface {
 				throw new RuntimeException("Invalid site");
 			}
 
-			return vr.saveAndFlush(new VisitSite(ss, ss.getPrice()));
+			return vr.saveAndFlush(new Visitors(ss, ss.getPrice()));
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage());
@@ -58,8 +58,8 @@ public class VisitInterfaceImplementation implements VisitInterface {
 	}
 
 	@Override
-	public VisitSite visitSite(String email, String phone, String province, String district, String sector,
-			String names, Gender gender, String siteRef) {
+	public Visitors visitors(String email, String phone, String province, String district, String sector, String names,
+			Gender gender, String siteRef) {
 		try {
 			if (names.isBlank() || gender == null || siteRef.isBlank()) {
 				throw new RuntimeException("Please fill all requirements");
@@ -84,7 +84,7 @@ public class VisitInterfaceImplementation implements VisitInterface {
 //			}
 
 			return vr.saveAndFlush(
-					new VisitSite(email, phone, province, district, sector, names, gender, ss, ss.getPrice()));
+					new Visitors(email, phone, province, district, sector, names, gender, ss, ss.getPrice()));
 
 		} catch (Exception ex) {
 			throw new RuntimeException(ex.getMessage());
@@ -121,7 +121,7 @@ public class VisitInterfaceImplementation implements VisitInterface {
 	@Override
 	public List<VisitTable> findAllWithPagination(int offset, int pagesize) {
 		try {
-			Page<VisitSite> allPageable = vr.findAll(PageRequest.of(offset, pagesize));
+			Page<Visitors> allPageable = vr.findAll(PageRequest.of(offset, pagesize));
 			output.clear();
 			allPageable.forEach(x -> {
 				output.add(new VisitTable(x.getNames(), x.getGender(), x.getDate(), x.getPaidAmount()));
@@ -179,8 +179,44 @@ public class VisitInterfaceImplementation implements VisitInterface {
 
 	@Override
 	public double countRevenue(String period, String refKey) {
-		// TODO Auto-generated method stub
-		return 0;
+		try {
+			if (period.isBlank()) {
+				throw new RuntimeException("Invalid period");
+			}
+
+			String peri = period.toUpperCase();
+
+			Site site = site_serv.searchByReferenceKey(refKey);
+			String valu;
+			if (peri.equalsIgnoreCase("TODAY")) {
+				valu = vr.sumSiteRevenueToday(site);
+				if (valu == null) {
+					return 0;
+				} else {
+					return Double.parseDouble(valu);
+				}
+			}
+			if (peri.equalsIgnoreCase("MONTH")) {
+				valu = vr.sumSiteRevenueMonth(site);
+				if (valu == null) {
+					return 0;
+				} else {
+					return Double.parseDouble(valu);
+				}
+			}
+			if (peri.equalsIgnoreCase("YEAR")) {
+				valu = vr.sumSiteRevenueYear(site);
+				if (valu == null) {
+					return 0;
+				} else {
+					return Double.parseDouble(valu);
+				}
+			} else {
+				return 0;
+			}
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
 	}
 
 	@Override

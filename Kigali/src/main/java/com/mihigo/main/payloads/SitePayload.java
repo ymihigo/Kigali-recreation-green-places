@@ -1,5 +1,7 @@
 package com.mihigo.main.payloads;
 
+import java.util.List;
+
 import org.springframework.stereotype.Component;
 
 @Component
@@ -14,13 +16,18 @@ public class SitePayload {
 	private double price;
 	private int id;
 	private String ref;
+	private String about;
+	private String longitude;
+	private String latitude;
+	private List<String> photos;
+	private boolean bookable;
 
 	public SitePayload() {
 		super();
 	}
 
 	public SitePayload(String email, String phone, String province, String district, String sector, String name,
-			String status, double price, int id, String ref) {
+			String status, double price, int id, String ref, boolean bookable) {
 		this.email = email;
 		this.phone = phone;
 		this.province = province;
@@ -31,10 +38,11 @@ public class SitePayload {
 		this.price = price;
 		this.id = id;
 		this.ref = ref;
+		this.bookable = bookable;
 	}
 
 	public SitePayload(String email, String phone, String province, String district, String sector, String name,
-			String status, double price) {
+			String status, double price, boolean bookable) {
 		this.email = email;
 		this.phone = phone;
 		this.province = province;
@@ -43,10 +51,11 @@ public class SitePayload {
 		this.name = name;
 		this.status = status;
 		this.price = price;
+		this.bookable = bookable;
 	}
 
 	public SitePayload(String email, String phone, String province, String district, String sector, String name,
-			String status, double price, String ref) {
+			String status, double price, String ref, boolean bookable) {
 		this.email = email;
 		this.phone = phone;
 		this.province = province;
@@ -56,6 +65,26 @@ public class SitePayload {
 		this.status = status;
 		this.price = price;
 		this.ref = ref;
+		this.bookable = bookable;
+	}
+
+	public SitePayload(String email, String phone, String province, String district, String sector, String name,
+			String status, double price, String ref, String about, String longitude, String latitude,
+			List<String> photos, boolean bookable) {
+		this.email = email;
+		this.phone = phone;
+		this.province = province;
+		this.district = district;
+		this.sector = sector;
+		this.name = name;
+		this.status = status;
+		this.price = price;
+		this.ref = ref;
+		this.about = about;
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.photos = photos;
+		this.bookable = bookable;
 	}
 
 	public String getEmail() {
@@ -137,7 +166,45 @@ public class SitePayload {
 	public void setRef(String ref) {
 		this.ref = ref;
 	}
-	
-	
+
+	public String getAbout() {
+		return about;
+	}
+
+	public void setAbout(String about) {
+		this.about = about;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public List<String> getPhotos() {
+		return photos;
+	}
+
+	public void setPhotos(List<String> photos) {
+		this.photos = photos;
+	}
+
+	public boolean isBookable() {
+		return bookable;
+	}
+
+	public void setBookable(boolean bookable) {
+		this.bookable = bookable;
+	}
 
 }

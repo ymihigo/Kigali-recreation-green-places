@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.mihigo.main.models.Gender;
 import com.mihigo.main.service.site.SiteInterface;
 import com.mihigo.main.service.userRoles.UserRolesInterface;
 import com.mihigo.main.service.users.UserServices;

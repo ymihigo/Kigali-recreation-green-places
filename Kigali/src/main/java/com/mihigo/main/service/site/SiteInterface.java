@@ -11,7 +11,7 @@ import com.mihigo.main.models.Users;
 public interface SiteInterface {
 
 	Site createSite(String email, String phone, String province, String district, String sector, String name,
-			String status, double price);
+			String status, double price,String about,String longitute,String latitude,boolean bookable);
 
 	List<Site> allSite();
 
@@ -27,7 +27,7 @@ public interface SiteInterface {
 	long countByStatus(SiteStatus status);
 
 	long countAllSites();
-
-	Site addSiteImages(String siteRefKey, MultipartFile photo1, MultipartFile photo2, MultipartFile photo3);
+	
+	Site addSiteImages(String siteRefKey, List<MultipartFile> photos);
 
 }

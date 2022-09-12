@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.mihigo.main.exceptionHandler.InvalidParameters;
+import com.mihigo.main.models.BookingSite;
 import com.mihigo.main.models.Districts;
 import com.mihigo.main.models.Gender;
 import com.mihigo.main.models.ReportTyoe;
@@ -27,12 +28,14 @@ import com.mihigo.main.models.Site;
 import com.mihigo.main.models.SiteStatus;
 import com.mihigo.main.models.Role;
 import com.mihigo.main.models.Users;
+import com.mihigo.main.payloads.BookingPayload;
 import com.mihigo.main.payloads.SitePayload;
 import com.mihigo.main.payloads.UserInputPayload;
 import com.mihigo.main.payloads.UserOutputPayload;
 import com.mihigo.main.payloads.UserPayloadRef;
 import com.mihigo.main.payloads.VisitTable;
 import com.mihigo.main.repositories.ProvinceRepo;
+import com.mihigo.main.service.booking.BookingService;
 import com.mihigo.main.service.districts.DistrictsServices;
 import com.mihigo.main.service.reports.ReportServiceInterface;
 import com.mihigo.main.service.sectors.SectorServices;
@@ -66,6 +69,9 @@ public class KrgController {
 
 	@Autowired
 	private UserRolesInterface role_Service;
+
+	@Autowired
+	private BookingService bookserv;
 
 	@RequestMapping(method = RequestMethod.POST, path = "admin/newAdmin")
 	@CrossOrigin(origins = "*")
@@ -120,7 +126,7 @@ public class KrgController {
 		}
 	}
 
-	@RequestMapping(method = RequestMethod.POST, path = "admin/siteAdminByRef")
+	@RequestMapping(method = RequestMethod.POST, path = "user/siteAdminByRef")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> createSiteUserByRef(@RequestBody UserPayloadRef user) throws InvalidParameters {
 		try {
@@ -143,7 +149,8 @@ public class KrgController {
 	public ResponseEntity<?> createSite(@RequestBody SitePayload si) throws InvalidParameters {
 		try {
 			Site s = siteserv.createSite(si.getEmail(), si.getPhone(), si.getProvince(), si.getDistrict(),
-					si.getSector(), si.getName(), si.getStatus(), si.getPrice());
+					si.getSector(), si.getName(), si.getStatus(), si.getPrice(), si.getAbout(), si.getLongitude(),
+					si.getLatitude(), si.isBookable());
 			return new ResponseEntity<String>(s.getRefKey(), HttpStatus.OK);
 		} catch (Exception ex) {
 			throw new InvalidParameters(ex.getMessage());
@@ -235,9 +242,26 @@ public class KrgController {
 	public ResponseEntity<?> getSiteByrefKey(@RequestParam(value = "ref") String ref) throws InvalidParameters {
 		try {
 			Site sit = siteserv.searchByReferenceKey(ref);
-			return new ResponseEntity<SitePayload>(new SitePayload(sit.getEmail(), sit.getPhone(), sit.getProvince(),
-					sit.getDistrict(), sit.getSector(), sit.getName(), sit.getStatus().toString(), sit.getPrice(),
-					sit.getRefKey()), HttpStatus.OK);
+			return new ResponseEntity<SitePayload>(
+					new SitePayload(sit.getEmail(), sit.getPhone(), sit.getProvince(), sit.getDistrict(),
+							sit.getSector(), sit.getName(), sit.getStatus().toString(), sit.getPrice(), sit.getRefKey(),
+							sit.getAbout(), sit.getLongitude(), sit.getLatitude(), sit.getPhotos(), sit.isBookable()),
+					HttpStatus.OK);
+		} catch (Exception ex) {
+			throw new InvalidParameters(ex.getMessage());
+		}
+	}
+
+	@GetMapping("all/getSiteByRef")
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<?> allSiteByrefKey(@RequestParam(value = "ref") String ref) throws InvalidParameters {
+		try {
+			Site sit = siteserv.searchByReferenceKey(ref);
+			return new ResponseEntity<SitePayload>(
+					new SitePayload(sit.getEmail(), sit.getPhone(), sit.getProvince(), sit.getDistrict(),
+							sit.getSector(), sit.getName(), sit.getStatus().toString(), sit.getPrice(), sit.getRefKey(),
+							sit.getAbout(), sit.getLongitude(), sit.getLatitude(), sit.getPhotos(), sit.isBookable()),
+					HttpStatus.OK);
 		} catch (Exception ex) {
 			throw new InvalidParameters(ex.getMessage());
 		}
@@ -341,6 +365,25 @@ public class KrgController {
 		}
 	}
 
+	@GetMapping("/all/all_sites_by_status")
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<?> loadAllWorkingSite(@RequestParam("status") SiteStatus status) throws InvalidParameters {
+		try {
+			switch (status) {
+			case Working:
+				return ResponseEntity.ok().body(siteserv.findByStatus(SiteStatus.Working));
+			case Not_Working:
+				return ResponseEntity.ok().body(siteserv.findByStatus(SiteStatus.Not_Working));
+			case Under_Construction:
+				return ResponseEntity.ok().body(siteserv.findByStatus(SiteStatus.Under_Construction));
+			default:
+				throw new InvalidParameters("Invalid status");
+			}
+		} catch (Exception ex) {
+			throw new InvalidParameters(ex.getMessage());
+		}
+	}
+
 	@GetMapping("search_province")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> findByProvinceName(@RequestParam("province") String province) throws InvalidParameters {
@@ -361,7 +404,7 @@ public class KrgController {
 		}
 	}
 
-	@PostMapping("/upload_profile")
+	@PostMapping("user/upload_profile")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> uploadProfilePicture(@RequestParam("key") String key,
 			@RequestParam("image") MultipartFile image) {
@@ -403,7 +446,7 @@ public class KrgController {
 			@RequestParam(value = "phone", required = false) String phone,
 			@RequestParam(value = "SiteRefKey", required = true) String siteRef) throws InvalidParameters {
 		try {
-			visitService.visitSite(email, phone, province, district, sector, name, gender, siteRef);
+			visitService.visitors(email, phone, province, district, sector, name, gender, siteRef);
 			return ResponseEntity.ok().build();
 		} catch (Exception ex) {
 			throw new InvalidParameters(ex.getMessage());
@@ -475,10 +518,9 @@ public class KrgController {
 	@RequestMapping(method = RequestMethod.POST, path = "user/uploadSiteImages")
 	@CrossOrigin(origins = "*")
 	public ResponseEntity<?> checkFileType(@RequestParam("refKey") String siteRefKey,
-			@RequestParam("imageOne") MultipartFile photo1, @RequestParam("imageTwo") MultipartFile photo2,
-			@RequestParam("imageThree") MultipartFile photo3) throws InvalidParameters {
+			@RequestParam("imageOne") List<MultipartFile> photo1) throws InvalidParameters {
 		try {
-			return ResponseEntity.ok().body(siteserv.addSiteImages(siteRefKey, photo1, photo2, photo3));
+			return ResponseEntity.ok().body(siteserv.addSiteImages(siteRefKey, photo1));
 		} catch (Exception ex) {
 			throw new InvalidParameters(ex.getMessage());
 		}
@@ -521,6 +563,55 @@ public class KrgController {
 			return ResponseEntity.ok().body(visitService.topselling(period));
 		} catch (Exception ex) {
 			throw new InvalidParameters(ex.getMessage());
+		}
+	}
+
+	@PostMapping("all/book")
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<?> createBooking(@RequestBody BookingPayload bookingPayload) throws InvalidParameters {
+		try {
+			return ResponseEntity.ok(bookserv.createBooking(bookingPayload.getNamez(), bookingPayload.getRefKey(),
+					bookingPayload.getPhone(), bookingPayload.getHowMany(), bookingPayload.getVisitDateTime(),
+					bookingPayload.getEmail()));
+		} catch (Exception ex) {
+			throw new InvalidParameters(ex.getMessage());
+		}
+	}
+
+	@GetMapping("user/getbookings")
+	@CrossOrigin(origins = "*")
+	public ResponseEntity<?> allSiteBooking(@RequestParam("siteRefKey") String refKey) throws InvalidParameters {
+		try {
+			return ResponseEntity.ok().body(bookserv.findBookingBySite(refKey));
+		} catch (Exception ex) {
+			throw new InvalidParameters(ex.getMessage());
+		}
+	}
+
+	@PostMapping("user/changebookingstatus")
+	public ResponseEntity<?> changeBookingStatus(@RequestParam("refKey") String refKey) {
+		try {
+			return ResponseEntity.ok().body(bookserv.changeStatus(refKey));
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
+
+	@GetMapping("user/revenuesummation")
+	public ResponseEntity<?> siteRevenue(@RequestParam("period") String period, @RequestParam("refKey") String refKey) {
+		try {
+			return ResponseEntity.ok().body(visitService.countRevenue(period, refKey));
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
+		}
+	}
+	
+	@GetMapping("user/sitecustomers")
+	public ResponseEntity<?> siteCustomers(@RequestParam("period") String period, @RequestParam("refKey") String refKey) {
+		try {
+			return ResponseEntity.ok().body(visitService.countAll(period, refKey));
+		} catch (Exception ex) {
+			throw new RuntimeException(ex.getMessage());
 		}
 	}
 }
